@@ -1,4 +1,5 @@
 ﻿using EducationContentService.Web.EndPointSettings;
+using EducationContentService.Web.Middlewares;
 using Serilog;
 
 namespace EducationContentService.Web.Configuration
@@ -7,6 +8,7 @@ namespace EducationContentService.Web.Configuration
     {
         public static IApplicationBuilder Configure(this WebApplication app)
         {
+            app.UseRequestCorrelationId();
             app.UseSerilogRequestLogging();
 
             app.UseSwagger();

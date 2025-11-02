@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using EducationContentService.Web.Configuration;
 using Serilog;
 
@@ -12,6 +12,12 @@ try
     Log.Information("Starting web application");
 
     var builder = WebApplication.CreateBuilder(args);
+
+    var environment = builder.Environment.EnvironmentName;
+
+    builder.Configuration.AddJsonFile($"appsettings.{environment}.json", true, true);
+
+    builder.Configuration.AddEnvironmentVariables();
 
     builder.Services.AddConfiguration(builder.Configuration);
 
