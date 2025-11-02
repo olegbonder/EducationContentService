@@ -1,0 +1,22 @@
+services:
+  education-content-service:
+    container_name: education-content-service
+    build:
+      context: ./backend/EducationContentService
+      dockerfile: Dockerfile
+    ports:
+      - "9001:9001"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=http://*:9001
+    restart: always
+  seq:
+    container_name: seq
+    image: datalust/seq:latest    
+    ports:
+      - "5341:5341" # HTTP API and UI
+      - "8081:80"   # Optional: if you want to expose Seq on port 80 directly
+    environment:
+      ACCEPT_EULA: 'Y' # Required to accept the Seq End User License Agreement
+      SEQ_FIRSTRUN_NOAUTHENTICATION: 'true'
+    restart: always

@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36511.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationContentService.Domain", "EducationContentService.Domain\EducationContentService.Domain.csproj", "{94F10BFE-699E-4EEE-B0FC-CC70F203DC14}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationContentService.Infrastructure.Postgres", "EducationContentService.Infrastructure.Postgres\EducationContentService.Infrastructure.Postgres.csproj", "{DE7D7D30-ED44-425E-814B-54F53A6BEE3D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Элементы решения", "Элементы решения", "{754FC069-D67B-A9D7-50A1-8D1CA196D8F1}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
+		EducationContentService.Web\Dockerfile = EducationContentService.Web\Dockerfile
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationContentService.Web", "EducationContentService.Web\EducationContentService.Web.csproj", "{50A85070-F175-2D1F-0004-314B735847E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationContentService.Core", "EducationContentService.Core\EducationContentService.Core.csproj", "{B50C9B77-DC91-7B2E-897C-152DCC46E2AF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{94F10BFE-699E-4EEE-B0FC-CC70F203DC14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94F10BFE-699E-4EEE-B0FC-CC70F203DC14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94F10BFE-699E-4EEE-B0FC-CC70F203DC14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94F10BFE-699E-4EEE-B0FC-CC70F203DC14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE7D7D30-ED44-425E-814B-54F53A6BEE3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE7D7D30-ED44-425E-814B-54F53A6BEE3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE7D7D30-ED44-425E-814B-54F53A6BEE3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE7D7D30-ED44-425E-814B-54F53A6BEE3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50A85070-F175-2D1F-0004-314B735847E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50A85070-F175-2D1F-0004-314B735847E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50A85070-F175-2D1F-0004-314B735847E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50A85070-F175-2D1F-0004-314B735847E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B50C9B77-DC91-7B2E-897C-152DCC46E2AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B50C9B77-DC91-7B2E-897C-152DCC46E2AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B50C9B77-DC91-7B2E-897C-152DCC46E2AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B50C9B77-DC91-7B2E-897C-152DCC46E2AF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DC1375B6-EF44-4159-979E-8A2B92EFBEB0}
+	EndGlobalSection
+EndGlobal
