@@ -11,12 +11,13 @@ namespace EducationContentService.Web.Configuration
     {
         public static IServiceCollection AddConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddScoped<CreateHanlder>();
             services
-                .AddOpenApiSpec()
                 .AddSerilogLogging(configuration)
+                .AddOpenApiSpec()                
                 .AddEndpoints(typeof(IEndpoint).Assembly);
 
-            services.AddScoped<CreateHanlder>();
+
 
             return services;
         }

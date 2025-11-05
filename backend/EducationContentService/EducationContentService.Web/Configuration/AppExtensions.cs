@@ -11,8 +11,13 @@ namespace EducationContentService.Web.Configuration
             app.UseRequestCorrelationId();
             app.UseSerilogRequestLogging();
 
+            app.MapOpenApi();
+
             app.UseSwagger();
-            app.UseSwaggerUI();
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/openapi/v1.json", "Education Content Service V1");
+            });
 
             var apiGroup = app.MapGroup("/api/lessons").WithOpenApi();
             app.UseEndPoints(apiGroup);

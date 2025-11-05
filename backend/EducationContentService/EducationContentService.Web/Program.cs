@@ -1,4 +1,6 @@
 ﻿using System.Globalization;
+using EducationContentService.Core.Features.Lessons;
+using EducationContentService.Infrastructure.Postgres;
 using EducationContentService.Web.Configuration;
 using Serilog;
 
@@ -20,6 +22,8 @@ try
     builder.Configuration.AddEnvironmentVariables();
 
     builder.Services.AddConfiguration(builder.Configuration);
+
+    //builder.Services.AddScoped<ILessonsRepository, LessonsRepository>();
 
     var app = builder.Build();
 

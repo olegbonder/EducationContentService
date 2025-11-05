@@ -1,4 +1,4 @@
-﻿<Project>
+﻿<Project>  
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -6,6 +6,8 @@
     <AnalysisLevel>latest</AnalysisLevel>
     <AnalysisMode>all</AnalysisMode>
     <!--TreatWarningsAsErrors>true</TreatWarningsAsErrors-->
+    <!--CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors-->
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <EnableStyleCopAnalyzers>true</EnableStyleCopAnalyzers>
   </PropertyGroup>
