@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using EducationContentService.Domain.Shared;
 
 namespace EducationContentService.Domain.ValueObjects
 {
@@ -12,11 +13,11 @@ namespace EducationContentService.Domain.ValueObjects
             Value = value;
         }
 
-        public static Result<Title, string> Create(string value)
+        public static Result<Title, Error> Create(string value)
         {
             if (string.IsNullOrWhiteSpace(value) || value.Length > MAX_LENGTH)
             {
-                return "Заголовок пустой или слишком длинный";
+                return Error.Validation(new ErrorMessage("title.is.invalid","Заголовок пустой или слишком длинный", "title"));
             }
 
             return new Title(value);

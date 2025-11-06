@@ -6,25 +6,36 @@ using System.Threading.Tasks;
 
 namespace EducationContentService.Domain.Shared
 {
+    public record ErrorMessage(string Code, string Message, string? InvalidField);
     public sealed record Error
     {
-        public string Code { get; }
-
-        public string Message { get; }
+        public IReadOnlyList<ErrorMessage> Messages { get; } = [];
 
         public ErrorType ErrorType { get; }
-        public string? InvalidField { get; }
 
-        private Error(string code, string message, ErrorType errorType, string? invalidField)
+        private Error(IEnumerable<ErrorMessage> messages, ErrorType errorType)
         {
-            Code = code;
-            Message = message;
+            Messages = messages.ToArray();
             ErrorType = errorType;
-            InvalidField = invalidField;
         }
 
-        public static Error Validation(string code, string message, string invalidField) =>
-            new Error(code, message, ErrorType.VALIDATION, invalidField);
+        public static Error Validation(params IEnumerable<ErrorMessage> messages) =>
+            new Error(messages, ErrorType.VALIDATION);
+
+        public static Error NotFound(params IEnumerable<ErrorMessage> messages) =>
+            new Error(messages, ErrorType.NOT_FOUND);
+
+        public static Error Failure(params IEnumerable<ErrorMessage> messages) =>
+            new Error(messages, ErrorType.FAILURE);
+
+        public static Error Conflict(params IEnumerable<ErrorMessage> messages) =>
+            new Error(messages, ErrorType.CONFLICT);
+
+        public static Error Authentification(params IEnumerable<ErrorMessage> messages) =>
+            new Error(messages, ErrorType.AUTHENTIFICATION);
+
+        public static Error Authorization(params IEnumerable<ErrorMessage> messages) =>
+            new Error(messages, ErrorType.AUTHORIZATION);            
     }
 
     public enum ErrorType
@@ -32,6 +43,7 @@ namespace EducationContentService.Domain.Shared
         VALIDATION,
         NOT_FOUND,
         FAILURE,
+        CONFLICT,
         AUTHENTIFICATION,
         AUTHORIZATION,
     }
