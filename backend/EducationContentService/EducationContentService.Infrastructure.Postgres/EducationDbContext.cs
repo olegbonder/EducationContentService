@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EducationContentService.Domain.Lesson;
+using EducationContentService.Domain.ModuleItems;
+using EducationContentService.Domain.Modules;
+using Microsoft.EntityFrameworkCore;
 
 namespace EducationContentService.Infrastructure.Postgres
 {
@@ -8,8 +11,13 @@ namespace EducationContentService.Infrastructure.Postgres
         {
         }
 
-        protected EducationDbContext()
+        public DbSet<Lesson> Lessons => Set<Lesson>();
+        public DbSet<Module> Modules => Set<Module>();
+        public DbSet<ModuleItem> ModuleItems => Set<ModuleItem>();
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(EducationDbContext).Assembly);
         }
     }
 }

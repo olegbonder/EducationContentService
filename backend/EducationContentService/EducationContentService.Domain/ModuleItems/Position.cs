@@ -5,7 +5,7 @@ namespace EducationContentService.Domain.ModuleItems
 {
     public record Position
     {
-        private const int INITIAL_STEP = 5;
+        private const decimal INITIAL_STEP = 1000m;
 
         public Position(ItemType itemType, decimal value)
         {

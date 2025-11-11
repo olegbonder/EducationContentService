@@ -17,7 +17,7 @@ namespace EducationContentService.Domain.ValueObjects
         {
             if (string.IsNullOrWhiteSpace(value) || value.Length > MAX_LENGTH)
             {
-                return Error.Validation(new ErrorMessage("title.is.invalid","Заголовок пустой или слишком длинный", "title"));
+                return GeneralErrors.ValueIsInvalid("заголовок");
             }
 
             return new Title(value);
