@@ -1,32 +1,32 @@
-namespace EducationContentService.Domain.Shared;
+﻿namespace EducationContentService.Domain.Shared;
 
 public static class GeneralErrors
 {
     public static Error ValueIsInvalid(string? name = null)
     {
         string label = name ?? "значение";
-        return Error.Validation(new ErrorMessage("value.is.invalid", $"{label} недействительно", name));
+        return Error.Validation("value.is.invalid", $"{label} недействительно");
     }
 
     public static Error NotFound(Guid? id = null, string? name = null)
     {
         string forId = id == null ? string.Empty : $" по Id '{id}'";
-        return Error.NotFound(new ErrorMessage("record.not.found", $"{name ?? "запись"} не найдена{forId}", null));
+        return Error.NotFound("record.not.found", $"{name ?? "запись"} не найдена{forId}");
     }
 
     public static Error ValueIsRequired(string? name = null)
     {
         string label = name == null ? string.Empty : " " + name + " ";
-        return Error.Validation(new ErrorMessage("length.is.invalid", $"Поле{label}обязательно", null));
+        return Error.Validation("length.is.invalid", $"Поле{label}обязательно");
     }
 
     public static Error AlreadyExist()
     {
-        return Error.Validation(new ErrorMessage("record.already.exist", "Запись уже существует", null));
+        return Error.Validation("record.already.exist", "Запись уже существует");
     }
 
     public static Error Failure(string? message = null)
     {
-        return Error.Failure(new ErrorMessage("server.failure", message ?? "Серверная ошибка", null));
+        return Error.Failure("server.failure", message ?? "Серверная ошибка");
     }
 }

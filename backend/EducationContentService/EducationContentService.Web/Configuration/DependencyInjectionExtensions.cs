@@ -1,5 +1,6 @@
 ﻿using EducationContentService.Core;
 using EducationContentService.Core.Features.Lessons;
+using EducationContentService.Infrastructure.Postgres;
 using EducationContentService.Web.EndPointSettings;
 using Microsoft.OpenApi.Models;
 using Serilog;
@@ -11,15 +12,12 @@ namespace EducationContentService.Web.Configuration
     {
         public static IServiceCollection AddConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<CreateHanlder>();
-            services
+            return services
+                .AddCore(configuration)
+                .AddInfrastructurePostgres(configuration)
                 .AddSerilogLogging(configuration)
                 .AddOpenApiSpec()                
                 .AddEndpoints(typeof(IEndpoint).Assembly);
-
-
-
-            return services;
         }
 
         private static IServiceCollection AddOpenApiSpec(this IServiceCollection services)
