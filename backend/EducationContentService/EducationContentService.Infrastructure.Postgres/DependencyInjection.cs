@@ -10,7 +10,9 @@ namespace EducationContentService.Infrastructure.Postgres
         {
             services.AddScoped<ILessonsRepository, LessonsRepository>();
 
-            services.AddDbContext<EducationDbContext>();
+            services.AddDbContextPool<EducationDbContext>((sp, options) => 
+            { 
+            });
 
             return services;
         }

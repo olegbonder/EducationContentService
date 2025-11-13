@@ -20,16 +20,11 @@ namespace EducationContentService.Core.Features.Lessons
         public void MapEndPoint(IEndpointRouteBuilder routeBuilder)
         {
             routeBuilder.MapPost("api/lessons", 
-                async Task<Microsoft.AspNetCore.Http.IResult>([FromBody] CreateLessonRequest request, 
+                async Task<EndpointResult<Guid>>([FromBody] CreateLessonRequest request, 
                 [FromServices] CreateHanlder handler, 
                 CancellationToken cancellationToken) =>
-            {
-                var result = await handler.Handle(request, cancellationToken);
-
-                return result.IsFailure 
-                    ? Results.BadRequest(Envelope.Fail(result.Error))
-                    : new SuccessResult() .Ok(Envelope.Ok(request.Title));
-            });
+                    await handler.Handle(request, cancellationToken)
+            );
         }
     }
 

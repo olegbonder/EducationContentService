@@ -1,0 +1,27 @@
+﻿using EducationContentService.Domain.Shared;
+
+namespace EducationContentService.Domain.Exceptions
+{
+    public class NotFoundException : Exception
+    {
+        public Error Error { get; } = null!;
+
+        public NotFoundException(Error error)
+            : base(error.GetMessage())
+        {
+            
+        }
+        public NotFoundException(string message) 
+            : base(message)
+        {
+        }
+
+        public NotFoundException(string message, Exception innerException) 
+            : base(message, innerException)
+        {
+        }
+        public NotFoundException()
+        {
+        }
+    }
+}

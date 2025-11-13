@@ -27,6 +27,8 @@ namespace EducationContentService.Domain.Shared
             ErrorType = errorType;
         }
 
+        public string GetMessage() => string.Join(";", Messages.Select(m => m.ToString()));
+
         public static Error Validation(string code, string message, string? invalidField = null) =>
             new Error([new ErrorMessage(code, message, invalidField)], ErrorType.VALIDATION);
 
