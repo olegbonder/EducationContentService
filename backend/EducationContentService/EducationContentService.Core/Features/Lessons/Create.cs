@@ -1,25 +1,39 @@
-﻿using CSharpFunctionalExtensions;
-using EducationContentService.Core.Endpoints;
-using EducationContentService.Core.Validation;
+﻿using Core.Validation;
+using CSharpFunctionalExtensions;
+using EducationContentService.Contracts;
 using EducationContentService.Domain.Lesson;
-using EducationContentService.Domain.Shared;
 using EducationContentService.Domain.ValueObjects;
 using FluentValidation;
+using Framework;
+using Framework.Endpoints;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
+using Shared.SharedKernel;
 
 namespace EducationContentService.Core.Features.Lessons
 {
-    public record CreateLessonRequest(string Title, string Description, DateTime StartDate);
-    public class CreateEndpoint : IEndpoint
+    public sealed class CreateLessonRequestValidator : AbstractValidator<CreateLessonRequest>
+    {
+        public CreateLessonRequestValidator()
+        {
+            RuleFor(l => l.Title)
+                .MustBeValueObject(Title.Create);
+
+            RuleFor(l => l.Description)
+                .MustBeValueObject(Description.Create);
+
+            RuleFor(l => l.StartDate)
+                .NotEmpty().WithError(GeneralErrors.ValueIsInvalid(nameof(CreateLessonRequest.StartDate)));
+        }
+    }
+
+    public sealed class CreateEndpoint : IEndpoint
     {
         public void MapEndPoint(IEndpointRouteBuilder routeBuilder)
         {
-            routeBuilder.MapPost("api/lessons", 
+            routeBuilder.MapPost("/lessons", 
                 async Task<EndpointResult<Guid>>([FromBody] CreateLessonRequest request, 
                 [FromServices] CreateHanlder handler, 
                 CancellationToken cancellationToken) =>
@@ -59,7 +73,7 @@ namespace EducationContentService.Core.Features.Lessons
 
             var lesson = new Lesson(Guid.NewGuid(), title, description);
 
-            var result = await _lessonsRepository.AddAsync(lesson);
+            var result = await _lessonsRepository.AddAsync(lesson, cancellationToken);
             if (result.IsFailure)
             {
                 return result.Error;

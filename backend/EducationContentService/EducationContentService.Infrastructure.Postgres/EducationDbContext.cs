@@ -1,19 +1,18 @@
-﻿using EducationContentService.Domain.Lesson;
-using EducationContentService.Domain.ModuleItems;
-using EducationContentService.Domain.Modules;
+﻿using EducationContentService.Core.Database;
+using EducationContentService.Domain.Lesson;
 using Microsoft.EntityFrameworkCore;
 
 namespace EducationContentService.Infrastructure.Postgres
 {
-    public class EducationDbContext : DbContext
+    public class EducationDbContext : DbContext, IEducationReadDbContext
     {
         public EducationDbContext(DbContextOptions options) : base(options)
         {
         }
 
         public DbSet<Lesson> Lessons => Set<Lesson>();
-        public DbSet<Module> Modules => Set<Module>();
-        public DbSet<ModuleItem> ModuleItems => Set<ModuleItem>();
+
+        public IQueryable<Lesson> LessonQuery => Lessons.AsNoTracking().AsQueryable();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

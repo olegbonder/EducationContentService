@@ -5,6 +5,9 @@ using EducationContentService.Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Npgsql;
+using Shared.SharedKernel;
+using System.Linq.Expressions;
+using Index = EducationContentService.Infrastructure.Postgres.Configurations.Index;
 
 namespace EducationContentService.Infrastructure.Postgres
 {
@@ -32,7 +35,7 @@ namespace EducationContentService.Infrastructure.Postgres
             catch (DbUpdateException ex) when (ex.InnerException is PostgresException pgEx)
             {
                 if (pgEx is { SqlState: PostgresErrorCodes.UniqueViolation, ConstraintName: not null }
-                    && pgEx.ConstraintName.Contains("title", StringComparison.InvariantCultureIgnoreCase))
+                    && pgEx.ConstraintName.Contains(Index.TITLE, StringComparison.InvariantCultureIgnoreCase))
                 {
                     return EducationErrors.TitleConflict(lesson.Title.Value);
                 }
@@ -53,6 +56,17 @@ namespace EducationContentService.Infrastructure.Postgres
 
                 return EducationErrors.DataBaseError();
             }
+        }
+
+        public async Task<Result<Lesson, Error>> GetBy(Expression<Func<Lesson, bool>> predicate, CancellationToken cancellationToken = default)
+        {
+            var lesson = await _dbContext.Lessons.FirstOrDefaultAsync(predicate, cancellationToken);
+            if (lesson is null)
+            {
+                return GeneralErrors.NotFound();
+            }
+
+            return lesson;
         }
     }
 }

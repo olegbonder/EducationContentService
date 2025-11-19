@@ -10,6 +10,9 @@ namespace EducationContentService.Core
         public static IServiceCollection AddCore(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<CreateHanlder>();
+            services.AddScoped<GetHanlder>();
+            services.AddScoped<SoftDeleteHanlder>();
+            services.AddScoped<UpdateInfoHanlder>();
 
             services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
 
