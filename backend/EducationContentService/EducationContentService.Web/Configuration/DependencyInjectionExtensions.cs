@@ -1,10 +1,9 @@
 ﻿using EducationContentService.Core;
-using EducationContentService.Core.Features.Lessons;
 using EducationContentService.Infrastructure.Postgres;
 using EducationContentService.Web.EndPointSettings;
-using Microsoft.OpenApi.Models;
-using Serilog;
-using Serilog.Exceptions;
+using Framework;
+using Framework.Logging;
+using Framework.Swagger;
 
 namespace EducationContentService.Web.Configuration
 {
@@ -15,41 +14,9 @@ namespace EducationContentService.Web.Configuration
             return services
                 .AddCore(configuration)
                 .AddInfrastructurePostgres(configuration)
-                .AddSerilogLogging(configuration)
-                .AddOpenApiSpec()                
+                .AddSerilogLogging(configuration, "LessonService")
+                .AddOpenApiSpec("Eduacation Content Service", "v1")                
                 .AddEndpoints(typeof(IEndpoint).Assembly);
-        }
-
-        private static IServiceCollection AddOpenApiSpec(this IServiceCollection services)
-        {
-            services.AddOpenApi();
-
-            services.AddSwaggerGen(options =>
-            {
-                options.SwaggerDoc("v1", new OpenApiInfo
-                {
-                    Title = "Eduacation Content Service",
-                    Version = "v1",
-                    Contact = new OpenApiContact
-                    {
-                        Name = "Oleg",
-                        Email = "olegbonder@gmail.com",
-                    },
-                });
-            });
-
-            return services;
-        }
-
-        private static IServiceCollection AddSerilogLogging(this IServiceCollection services, IConfiguration configuration)
-        {
-            services.AddSerilog((serviceProvider, lo) => lo
-                .ReadFrom.Configuration(configuration)
-                .ReadFrom.Services(serviceProvider)
-                .Enrich.FromLogContext()
-                .Enrich.WithExceptionDetails()
-                .Enrich.WithProperty("ServiceName", "LessonService"));
-            return services;
         }
     }
 }

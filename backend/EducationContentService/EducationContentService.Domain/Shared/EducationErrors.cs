@@ -1,4 +1,4 @@
-﻿using CSharpFunctionalExtensions;
+﻿using Shared.SharedKernel;
 
 namespace EducationContentService.Domain.Shared;
 

@@ -1,5 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
-using EducationContentService.Domain.Shared;
+using Shared.SharedKernel;
 using System.Text.RegularExpressions;
 
 namespace EducationContentService.Domain.ValueObjects

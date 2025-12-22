@@ -33,5 +33,18 @@ namespace EducationContentService.Domain.Lesson
         public bool IsDeleted { get; private set; }
 
         public DateTime? DeleteAt { get; private set; }
+
+        public void SoftDelete()
+        {
+            IsDeleted = true;
+            DeleteAt = DateTime.UtcNow;
+        }
+
+        public void UpdateInfo(Title title, Description description)
+        {
+            Title = title; 
+            Description = description;
+            UpdatedAt = DateTime.UtcNow;
+        }
     }
 }

@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+    <PackageReference Include="Scrutor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Shared.SharedKernel\Shared.SharedKernel.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <PackageId>Core</PackageId>
+    <Version>0.0.1</Version>
+    <Authors>Manuilov Oleg</Authors>
+    <PackageDescription>Application Project</PackageDescription>
+    <RepositoryUrl>https://github.com/olegbonder/EducationContentService</RepositoryUrl>
+  </PropertyGroup>
+  
+</Project>

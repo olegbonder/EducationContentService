@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="CSharpFunctionalExtensions" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <PackageId>SharedKernel</PackageId>
+    <Version>0.0.1</Version>
+    <Authors>Manuilov Oleg</Authors>
+    <PackageDescription>General Project</PackageDescription>
+    <RepositoryUrl>https://github.com/olegbonder/EducationContentService</RepositoryUrl>
+  </PropertyGroup>
+  
+</Project>
