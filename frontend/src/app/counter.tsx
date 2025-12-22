@@ -1,24 +1,35 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useEffect, useState } from "react";
 
 export default function Counter() {
-    const count = calulateSum(5, 10);
+    const [counter, setCounter] = useState(0);
 
-    function calulateSum(a: number, b: number): number {
-        return a + b;    
-    }
+    useEffect(() => {
+        console.log("Counter mounted")
+    }, [counter]);    
 
     const handleClick = () => {
-        console.log(count);
+        setCounter(counter + 1)        
     }
 
+    const isWin = counter >= 10;
+
     return <div className="flex flex-col gap-5">
-        <CoolCount count={count} />
+        <CoolCount count={counter} />
         <Button
             onClick={handleClick}
             className="w-fit"
         >Увеличить</Button>
+
+        <Input 
+            type="text" 
+            placeholder="Max letter"
+            className="max-w-sm rounded-lg border-2 border-border bg-card px-4 py-2 text-foreground"/>
+
+        {isWin && <span>Поздравляю!</span>}         
     </div>    
 }
 
