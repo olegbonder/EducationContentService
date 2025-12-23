@@ -1,3 +1,5 @@
+"use client";
+
 import { routes } from "@/shared/routes";
 import { Home, ListTodo, Plus } from "lucide-react";
 import Link from "next/link";
@@ -10,8 +12,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarTrigger,
+  useSidebar,
 } from "../ui/sidebar";
+import { usePathname } from "next/navigation";
 
 const menuItems = [
   { href: routes.home, label: "Главная", icon: Home },
@@ -20,6 +23,10 @@ const menuItems = [
 ];
 
 export default function AppSideBar() {
+  const pathname = usePathname();
+
+  const { isMobile, setOpenMobile } = useSidebar();
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="pl-5"></SidebarHeader>
@@ -27,19 +34,31 @@ export default function AppSideBar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1">
-              {menuItems.map((item) => (
-                <SidebarMenuItem key={item.href}>
-                  <SidebarMenuButton
-                    asChild
-                    className="hover:bg-accent transition-colors"
-                  >
-                    <Link href={item.href} className="flex items-center gap-3">
-                      <item.icon className="h-5 w-5" />
-                      <span>{item.label}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {menuItems.map((item) => {
+                const isActive =
+                  pathname === item.href ||
+                  pathname.startsWith(item.href + "/");
+
+                return (
+                  <SidebarMenuItem key={item.href}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={isActive}
+                      tooltip={item.label}
+                      className="hover:bg-gray-300 transition-colors"
+                      onClick={() => setOpenMobile(false)}
+                    >
+                      <Link
+                        href={item.href}
+                        className="flex items-center gap-3"
+                      >
+                        <item.icon className="h-5 w-5" />
+                        <span>{item.label}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
