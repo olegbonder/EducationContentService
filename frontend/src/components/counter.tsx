@@ -2,25 +2,15 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useEffect, useState } from "react";
+import useCounter from "@/hooks/use-counter";
 
 export default function Counter() {
-    const [counter, setCounter] = useState(0);
-
-    useEffect(() => {
-        console.log("Counter mounted")
-    }, [counter]);    
-
-    const handleClick = () => {
-        setCounter(counter + 1)        
-    }
-
-    const isWin = counter >= 10;
+    const {counter, click, isWin} = useCounter();
 
     return <div className="flex flex-col gap-5">
         <CoolCount count={counter} />
         <Button
-            onClick={handleClick}
+            onClick={click}
             className="w-fit"
         >Увеличить</Button>
 
