@@ -15,6 +15,7 @@ WORKDIR /src
 COPY ["Directory.Packages.props", "."]
 COPY ["Directory.Build.props", "."]
 COPY ["EducationContentService.Web/EducationContentService.Web.csproj", "EducationContentService.Web/"]
+COPY ["EducationContentService.Contracts/EducationContentService.Contracts.csproj", "EducationContentService.Contracts/"]
 COPY ["EducationContentService.Core/EducationContentService.Core.csproj", "EducationContentService.Core/"]
 COPY ["EducationContentService.Domain/EducationContentService.Domain.csproj", "EducationContentService.Domain/"]
 COPY ["EducationContentService.Infrastructure.Postgres/EducationContentService.Infrastructure.Postgres.csproj", "EducationContentService.Infrastructure.Postgres/"]

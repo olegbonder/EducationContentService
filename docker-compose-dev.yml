@@ -13,7 +13,7 @@ services:
       - education.service.env
     restart: always
   seq:
-    container_name: seq1
+    container_name: seq
     image: datalust/seq:latest    
     ports:
       - "5342:5341" # HTTP API and UI
