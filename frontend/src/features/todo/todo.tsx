@@ -1,9 +1,14 @@
-import { Button } from "./ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Input } from "./ui/input";
+import { Button } from "../../shared/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../../shared/components/ui/card";
+import { Input } from "../../shared/components/ui/input";
 import { useState } from "react";
-import { Checkbox } from "./ui/checkbox";
-import { Badge } from "./ui/badge";
+import { Checkbox } from "../../shared/components/ui/checkbox";
+import { Badge } from "../../shared/components/ui/badge";
 
 type Todo = {
   id: number;

@@ -1,6 +1,6 @@
 "use client";
 
-import Counter from "@/components/counter";
+import Counter from "@/features/counter/counter";
 
 export default function Home() {
   return <Counter />;

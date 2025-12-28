@@ -13,7 +13,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "../ui/sidebar";
+} from "../../shared/components/ui/sidebar";
 import { usePathname } from "next/navigation";
 
 const menuItems = [
