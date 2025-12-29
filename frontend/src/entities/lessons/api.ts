@@ -1,7 +1,60 @@
-import axios from "axios";
+import { apiClient } from "@/shared/api/axios-instance";
+
+export type CreateLessonRequest = {
+  title: string;
+  description: string;
+};
+
+export type GetLessonsRequest = {
+  search?: string;
+  page: number;
+  pageSize: number;
+};
+
+export type Envelope<T = unknown> = {
+  result: T | null;
+  error: ApiError | null;
+  isError: boolean;
+  timeGenerated: string;
+};
+
+export type ApiError = {
+  messages: ErrorMessage[];
+  type: ErrorType;
+};
+
+export type ErrorMessage = {
+  code: string;
+  message: string;
+  invalidField?: string | null;
+};
+
+export type ErrorType =
+  | "validation"
+  | "notFound"
+  | "conflict"
+  | "unauthorized"
+  | "forbidden"
+  | "serverError";
 
 export const lessonsApi = {
-  getLessons: () => {
-    const response = axios.get("http://localhost:5238/api");
+  getLessons: async (request: GetLessonsRequest): Promise<Lesson[]> => {
+    const response = await apiClient.get<Envelope<{ lessons: Lesson[] }>>(
+      "/lessons",
+      {
+        params: request,
+      }
+    );
+
+    return response.data.result?.lessons || [];
+  },
+
+  createLesson: async (request: CreateLessonRequest) => {
+    const response = await apiClient.post<CreateLessonRequest>(
+      "/lessons",
+      request
+    );
+
+    return response.data;
   },
 };

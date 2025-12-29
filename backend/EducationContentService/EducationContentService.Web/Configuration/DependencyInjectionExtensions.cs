@@ -1,4 +1,5 @@
 ﻿using EducationContentService.Core;
+using EducationContentService.Core.Features.Lessons;
 using EducationContentService.Infrastructure.Postgres;
 using EducationContentService.Web.EndPointSettings;
 using Framework;
@@ -16,7 +17,8 @@ namespace EducationContentService.Web.Configuration
                 .AddInfrastructurePostgres(configuration)
                 .AddSerilogLogging(configuration, "LessonService")
                 .AddOpenApiSpec("Eduacation Content Service", "v1")                
-                .AddEndpoints(typeof(IEndpoint).Assembly);
+                .AddEndpoints(typeof(GetEndpoint).Assembly)
+                .AddCors();
         }
     }
 }
