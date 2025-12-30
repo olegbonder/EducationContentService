@@ -1,4 +1,5 @@
 import { apiClient } from "@/shared/api/axios-instance";
+import { PaginationResponse } from "@/shared/api/types";
 
 export type CreateLessonRequest = {
   title: string;
@@ -38,15 +39,14 @@ export type ErrorType =
   | "serverError";
 
 export const lessonsApi = {
-  getLessons: async (request: GetLessonsRequest): Promise<Lesson[]> => {
-    const response = await apiClient.get<Envelope<{ lessons: Lesson[] }>>(
-      "/lessons",
-      {
-        params: request,
-      }
-    );
+  getLessons: async (request: GetLessonsRequest) => {
+    const response = await apiClient.get<
+      Envelope<PaginationResponse<{ lessons: Lesson[] }>>
+    >("/lessons", {
+      params: request,
+    });
 
-    return response.data.result?.lessons || [];
+    return response.data.result;
   },
 
   createLesson: async (request: CreateLessonRequest) => {

@@ -2,7 +2,6 @@
 
 import { Spinner } from "@/shared/components/ui/spinner";
 import { lessonsApi } from "@/entities/lessons/api";
-import { Badge } from "@/shared/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -11,31 +10,30 @@ import {
 } from "@/shared/components/ui/card";
 import { Link, Play } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Pagination } from "@/shared/components/ui/pagination";
+import { useQuery } from "@tanstack/react-query";
 
 const PAGE_SIZE = 10;
 
 export default function LessonsPage() {
   const [page, setPage] = useState(1);
-  const [lessons, setLessons] = useState<Lesson[] | null>(null);
-
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    lessonsApi
-      .getLessons({ page, pageSize: PAGE_SIZE })
-      .then((data) => setLessons(data))
-      .catch((error) => setError(error.message))
-      .finally(() => setIsLoading(false));
-  }, [page]);
-  console.log(lessons);
+  const {
+    data: lessons,
+    isLoading,
+    error,
+    isError,
+    isFetching,
+  } = useQuery({
+    queryFn: () => lessonsApi.getLessons({ page: page, pageSize: PAGE_SIZE }),
+    queryKey: ["lessons", { page }],
+  });
 
   if (isLoading) {
     return <Spinner />;
   }
 
   if (error) {
-    return <div>Ошибка: {error}</div>;
+    return <div>Ошибка: {error.message}</div>;
   }
 
   return (
@@ -76,6 +74,7 @@ export default function LessonsPage() {
           </Card>
         ))}
       </div>
+      {/*<Pagination pageSize={PAGE_SIZE} />*/}
     </div>
   );
 }

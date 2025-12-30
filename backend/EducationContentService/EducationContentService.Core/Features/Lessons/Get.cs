@@ -89,7 +89,9 @@ namespace EducationContentService.Core.Features.Lessons
                 .Take(request.PageSize)
                 .ToListAsync(cancellationToken);
 
-            return new PaginationLessonResponse(lessons, lessonsCount);
+            int totalPages = (int)Math.Ceiling(lessonsCount/ (double)request.PageSize);
+
+            return new PaginationLessonResponse(lessons, lessonsCount, request.Page, request.PageSize, totalPages);
         }
     }
 }
