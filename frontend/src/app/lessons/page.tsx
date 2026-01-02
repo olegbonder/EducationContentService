@@ -20,7 +20,6 @@ import {
 } from "@/shared/components/ui/pagination";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/shared/components/ui/button";
-import { get } from "http";
 
 const PAGE_SIZE = 2;
 
