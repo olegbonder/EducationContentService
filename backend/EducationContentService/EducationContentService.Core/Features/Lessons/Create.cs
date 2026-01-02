@@ -23,9 +23,6 @@ namespace EducationContentService.Core.Features.Lessons
 
             RuleFor(l => l.Description)
                 .MustBeValueObject(Description.Create);
-
-            RuleFor(l => l.StartDate)
-                .NotEmpty().WithError(GeneralErrors.ValueIsInvalid(nameof(CreateLessonRequest.StartDate)));
         }
     }
 

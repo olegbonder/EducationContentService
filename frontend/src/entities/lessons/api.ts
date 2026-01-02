@@ -40,11 +40,12 @@ export type ErrorType =
 
 export const lessonsApi = {
   getLessons: async (request: GetLessonsRequest) => {
-    const response = await apiClient.get<
-      Envelope<PaginationResponse<{ lessons: Lesson[] }>>
-    >("/lessons", {
-      params: request,
-    });
+    const response = await apiClient.get<Envelope<PaginationResponse<Lesson>>>(
+      "/lessons",
+      {
+        params: request,
+      }
+    );
 
     return response.data.result;
   },

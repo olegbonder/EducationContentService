@@ -77,7 +77,9 @@ namespace EducationContentService.Core.Features.Lessons
 
             int lessonsCount = await query.CountAsync(cancellationToken);
 
-            var lessons = await query.Select(l => new LessonDto
+            var lessons = await query
+            .OrderByDescending(l => l.CreatedAt)
+            .Select(l => new LessonDto
             {
                 Id = l.Id,
                 Title = l.Title.Value,
@@ -87,6 +89,7 @@ namespace EducationContentService.Core.Features.Lessons
             })
                 .Skip((request.Page - 1) * request.PageSize)
                 .Take(request.PageSize)
+                
                 .ToListAsync(cancellationToken);
 
             int totalPages = (int)Math.Ceiling(lessonsCount/ (double)request.PageSize);
