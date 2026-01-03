@@ -5,6 +5,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import AppSideBar from "../sidebar/app.sidebar";
 import Header from "../header/header";
 import { queryClient } from "@/shared/api/query-client";
+import { Toaster } from "@/shared/components/ui/sonner";
 
 export default function Layout({
   children,
@@ -22,6 +23,7 @@ export default function Layout({
           </div>
         </div>
       </SidebarProvider>
+      <Toaster position="top-center" richColors expand closeButton />
     </QueryClientProvider>
   );
 }

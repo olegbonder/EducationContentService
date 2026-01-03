@@ -1,4 +1,5 @@
 import { apiClient } from "@/shared/api/axios-instance";
+import { Envelope } from "@/shared/api/envelope";
 import { PaginationResponse } from "@/shared/api/types";
 
 export type CreateLessonRequest = {
@@ -11,32 +12,6 @@ export type GetLessonsRequest = {
   page: number;
   pageSize: number;
 };
-
-export type Envelope<T = unknown> = {
-  result: T | null;
-  error: ApiError | null;
-  isError: boolean;
-  timeGenerated: string;
-};
-
-export type ApiError = {
-  messages: ErrorMessage[];
-  type: ErrorType;
-};
-
-export type ErrorMessage = {
-  code: string;
-  message: string;
-  invalidField?: string | null;
-};
-
-export type ErrorType =
-  | "validation"
-  | "notFound"
-  | "conflict"
-  | "unauthorized"
-  | "forbidden"
-  | "serverError";
 
 export const lessonsApi = {
   getLessons: async (request: GetLessonsRequest) => {

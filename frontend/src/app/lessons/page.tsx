@@ -20,6 +20,8 @@ import {
 } from "@/shared/components/ui/pagination";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/shared/components/ui/button";
+import { EnvelopeError } from "@/shared/api/errors";
+import { toast } from "sonner";
 
 const PAGE_SIZE = 2;
 
@@ -50,6 +52,13 @@ export default function LessonsPage() {
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["lessons"] });
     },
+    onError: (error) => {
+      if (error instanceof EnvelopeError) {
+        toast.error(error.message);
+        return;
+      }
+      toast.error("Ошибка при создании урока");
+    },
   });
 
   if (getIsPending) {
@@ -57,7 +66,7 @@ export default function LessonsPage() {
   }
 
   if (error) {
-    return <div>Ошибка: {error.message}</div>;
+    return <div className="text-red-500">Ошибка: {error.message}</div>;
   }
 
   if (createIsPending) {
