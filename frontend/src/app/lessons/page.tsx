@@ -1,7 +1,6 @@
 "use client";
 
 import { Spinner } from "@/shared/components/ui/spinner";
-import { lessonsApi } from "@/entities/lessons/api";
 import {
   Card,
   CardContent,
@@ -10,58 +9,18 @@ import {
 } from "@/shared/components/ui/card";
 import { Play } from "lucide-react";
 import { useState } from "react";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/shared/components/ui/pagination";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/shared/components/ui/button";
-import { EnvelopeError } from "@/shared/api/errors";
-import { toast } from "sonner";
-
-const PAGE_SIZE = 2;
+import { CreateLessonDialog } from "@/features/lessons/create-lesson-dialog";
+import LessonsPagination from "@/features/lessons/lessons-pagination";
+import { useLessonsList } from "@/features/lessons/model/use-lessons-list";
 
 export default function LessonsPage() {
-  const queryClient = useQueryClient();
+  const [open, setOpen] = useState(false);
   const [page, setPage] = useState(1);
-  const {
-    data,
-    isPending: getIsPending,
-    error,
-    isError,
-    isFetching,
-  } = useQuery({
-    queryFn: () => lessonsApi.getLessons({ page: page, pageSize: PAGE_SIZE }),
-    queryKey: ["lessons", { page }],
-  });
 
-  const {
-    mutate: createLesson,
-    isPending: createIsPending,
-    error: createLessonError,
-  } = useMutation({
-    mutationFn: () =>
-      lessonsApi.createLesson({
-        title: "Новый урок 2",
-        description: "Описание нового урока",
-      }),
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["lessons"] });
-    },
-    onError: (error) => {
-      if (error instanceof EnvelopeError) {
-        toast.error(error.message);
-        return;
-      }
-      toast.error("Ошибка при создании урока");
-    },
-  });
+  const { lessons, isPending, error, totalPages } = useLessonsList({ page });
 
-  if (getIsPending) {
+  if (isPending) {
     return <Spinner />;
   }
 
@@ -69,29 +28,18 @@ export default function LessonsPage() {
     return <div className="text-red-500">Ошибка: {error.message}</div>;
   }
 
-  if (createIsPending) {
-    return <Spinner />;
-  }
-
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Уроки</h1>
-        <Button onClick={() => createLesson()} disabled={getIsPending}>
-          Создать урок
-        </Button>
-        {createLessonError && (
-          <div className="text-red-500 mt-2">
-            Ошибка: {createLessonError.message}
-          </div>
-        )}
+        <Button onClick={() => setOpen(true)}>Создать урок</Button>
         <p className="text-muted-foreground">
           Все доступные уроки по .NET разработке
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {data?.items?.map((lesson) => (
+        {lessons?.map((lesson) => (
           <Card
             key={lesson.id}
             className="h-full hover:shadow-lg transition-shadow"
@@ -119,51 +67,15 @@ export default function LessonsPage() {
           </Card>
         ))}
       </div>
-      {data && data.totalPages > 1 && (
-        <div className="mt-8 flex justify-center">
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  onClick={() => setPage((prev) => Math.max(1, prev - 1))}
-                  className={
-                    page === 1
-                      ? "pointer-events-none opacity-50"
-                      : "cursor-pointer"
-                  }
-                />
-              </PaginationItem>
-              {Array.from(
-                { length: data.totalPages },
-                (_, index) => index + 1
-              ).map((pageNumber) => (
-                <PaginationItem key={pageNumber}>
-                  <PaginationLink
-                    className="cursor-pointer"
-                    onClick={() => setPage(pageNumber)}
-                    isActive={pageNumber === page}
-                  >
-                    {pageNumber}
-                  </PaginationLink>
-                </PaginationItem>
-              ))}
-
-              <PaginationItem>
-                <PaginationNext
-                  onClick={() =>
-                    setPage((prev) => Math.min(data.totalPages, prev + 1))
-                  }
-                  className={
-                    page === data.totalPages
-                      ? "pointer-events-none opacity-50"
-                      : "cursor-pointer"
-                  }
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </div>
+      {totalPages && (
+        <LessonsPagination
+          currentPage={page}
+          totalPages={totalPages}
+          onPageChange={setPage}
+        />
       )}
+
+      <CreateLessonDialog open={open} onOpenChange={setOpen} />
     </div>
   );
 }

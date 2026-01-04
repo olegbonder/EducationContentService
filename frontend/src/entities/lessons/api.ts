@@ -1,6 +1,7 @@
 import { apiClient } from "@/shared/api/axios-instance";
 import { Envelope } from "@/shared/api/envelope";
 import { PaginationResponse } from "@/shared/api/types";
+import { queryOptions } from "@tanstack/react-query";
 
 export type CreateLessonRequest = {
   title: string;
@@ -32,5 +33,22 @@ export const lessonsApi = {
     );
 
     return response.data;
+  },
+};
+
+export const lessonsQueryOptions = {
+  baseKey: "lessons",
+
+  getLessonsOptions: ({
+    page,
+    pageSize,
+  }: {
+    page: number;
+    pageSize: number;
+  }) => {
+    return queryOptions({
+      queryFn: () => lessonsApi.getLessons({ page: page, pageSize: pageSize }),
+      queryKey: [lessonsQueryOptions.baseKey, { page }],
+    });
   },
 };
