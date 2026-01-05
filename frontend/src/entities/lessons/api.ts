@@ -8,6 +8,12 @@ export type CreateLessonRequest = {
   description: string;
 };
 
+export type UpdateLessonRequest = {
+  lessonId: string;
+  title: string;
+  description: string;
+};
+
 export type GetLessonsRequest = {
   search?: string;
   page: number;
@@ -30,6 +36,25 @@ export const lessonsApi = {
     const response = await apiClient.post<CreateLessonRequest>(
       "/lessons",
       request
+    );
+
+    return response.data;
+  },
+
+  deleteLesson: async (lessonId: string) => {
+    const response = await apiClient.delete(`/lessons/${lessonId}`);
+
+    return response.data;
+  },
+
+  updateLesson: async ({
+    lessonId,
+    title,
+    description,
+  }: UpdateLessonRequest) => {
+    const response = await apiClient.patch<Envelope<string>>(
+      `/lessons/${lessonId}`,
+      { title, description }
     );
 
     return response.data;

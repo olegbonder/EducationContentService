@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 const PAGE_SIZE = 2;
 
 export function useLessonsList({ page }: { page: number }) {
-  const { data, isPending, error } = useQuery(
+  const { data, isPending, error, isError } = useQuery(
     lessonsQueryOptions.getLessonsOptions({ page, pageSize: PAGE_SIZE })
   );
 
@@ -15,5 +15,6 @@ export function useLessonsList({ page }: { page: number }) {
     currentPage: data?.page,
     isPending,
     error,
+    isError,
   };
 }

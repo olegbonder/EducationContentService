@@ -3,11 +3,11 @@ import { EnvelopeError } from "@/shared/api/errors";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-export function useCreateLesson() {
+export function useUpdateLesson() {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: lessonsApi.createLesson,
+    mutationFn: lessonsApi.updateLesson,
     onSettled: () => {
       queryClient.invalidateQueries({
         queryKey: [lessonsQueryOptions.baseKey],
@@ -18,15 +18,15 @@ export function useCreateLesson() {
         toast.error(error.message);
         return;
       }
-      toast.error("Ошибка при создании урока");
+      toast.error("Ошибка при обновлении урока");
     },
     onSuccess: () => {
-      toast.success("Урок успешно создан");
+      toast.success("Урок успешно обновлен");
     },
   });
 
   return {
-    createLesson: mutation.mutate,
+    updateLesson: mutation.mutate,
     isError: mutation.isError,
     error: mutation.error instanceof EnvelopeError ? mutation.error : undefined,
     isPending: mutation.isPending,

@@ -9,10 +9,10 @@ import {
 } from "@/shared/components/ui/dialog";
 import { Input } from "@/shared/components/ui/input";
 import { Label } from "@radix-ui/react-label";
-import { useState } from "react";
-import useCreateLesson from "./model/use-create-lesson";
+import { Textarea } from "@/shared/components/ui/textarea";
+import { useCreateLesson } from "./model/use-create-lesson";
 import { z } from "zod";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const createLessonSchema = z.object({
@@ -24,8 +24,7 @@ const createLessonSchema = z.object({
   description: z
     .string()
     .min(10, "Описание должно содержать минимум 10 символов")
-    .max(1000, "Описание не должно превышать 1000 символов")
-    .optional(),
+    .max(1000, "Описание не должно превышать 1000 символов"),
 });
 
 type CreateLessonData = z.infer<typeof createLessonSchema>;
@@ -58,8 +57,8 @@ export function CreateLessonDialog({
   const onSubmit = async (data: CreateLessonData) => {
     createLesson(data, {
       onSuccess: () => {
-        onOpenChange(false);
         reset(initialData);
+        onOpenChange(false);
       },
     });
   };
@@ -91,7 +90,7 @@ export function CreateLessonDialog({
           </div>
           <div className="grid gap-2">
             <Label htmlFor="description">Описание</Label>
-            <Input
+            <Textarea
               id="description"
               placeholder="Введите описание урока"
               className={`w-full ${
@@ -112,7 +111,7 @@ export function CreateLessonDialog({
             <Button variant="outline" onClick={() => onOpenChange(false)}>
               Отмена
             </Button>
-            <Button type="submit" disabled={isPending || !isValid}>
+            <Button type="submit" disabled={isPending}>
               Создать урок
             </Button>
             {error && <div className="text-red-500">{error.message}</div>}
