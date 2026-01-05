@@ -7,6 +7,7 @@ import {
   PaginationLink,
   PaginationNext,
 } from "@/shared/components/ui/pagination";
+import { ChevronLeft } from "lucide-react";
 
 interface LessonsPaginationProps {
   currentPage: number;
@@ -14,7 +15,7 @@ interface LessonsPaginationProps {
   onPageChange: (page: number) => void;
 }
 
-export default function LessonsPagination({
+export function LessonsPagination({
   currentPage,
   totalPages,
   onPageChange,

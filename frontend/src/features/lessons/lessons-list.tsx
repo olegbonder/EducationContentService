@@ -15,6 +15,7 @@ import { CreateLessonDialog } from "./create-lesson-dialog";
 import { LessonCard } from "./lesson-card";
 import { useLessonsList } from "./model/use-lessons-list";
 import { UpdateLessonDialog } from "./update-lesson-dialog";
+import { LessonsPagination } from "./lessons-pagination";
 
 export function LessonsList() {
   const [createOpen, setCreateOpen] = useState(false);
@@ -25,7 +26,9 @@ export function LessonsList() {
     undefined
   );
 
-  const { lessons, isPending, error, isError } = useLessonsList({ page });
+  const { lessons, isPending, error, isError, totalPages } = useLessonsList({
+    page,
+  });
 
   if (isPending) {
     return (
@@ -78,6 +81,13 @@ export function LessonsList() {
           />
         ))}
       </div>
+      {totalPages && (
+        <LessonsPagination
+          currentPage={page}
+          totalPages={totalPages}
+          onPageChange={setPage}
+        />
+      )}
 
       <CreateLessonDialog open={createOpen} onOpenChange={setCreateOpen} />
 

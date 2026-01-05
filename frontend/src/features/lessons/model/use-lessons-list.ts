@@ -1,7 +1,7 @@
 import { lessonsQueryOptions } from "@/entities/lessons/api";
 import { useQuery } from "@tanstack/react-query";
 
-const PAGE_SIZE = 2;
+const PAGE_SIZE = 3;
 
 export function useLessonsList({ page }: { page: number }) {
   const { data, isPending, error, isError } = useQuery(
