@@ -1,11 +1,43 @@
 import { lessonsQueryOptions } from "@/entities/lessons/api";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { RefCallback, useCallback } from "react";
 
 const PAGE_SIZE = 3;
 
-export function useLessonsList({ page }: { page: number }) {
-  const { data, isPending, error, isError } = useQuery(
-    lessonsQueryOptions.getLessonsOptions({ page, pageSize: PAGE_SIZE })
+export function useLessonsList() {
+  const {
+    data,
+    isPending,
+    error,
+    isError,
+    refetch,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+  } = useInfiniteQuery({
+    ...lessonsQueryOptions.getLessonsInfiniteOptions({ pageSize: PAGE_SIZE }),
+  });
+
+  const cursorRef: RefCallback<HTMLDivElement> = useCallback(
+    (el) => {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting) {
+            fetchNextPage();
+          }
+        },
+        {
+          threshold: 0.5,
+        }
+      );
+
+      if (el) {
+        observer.observe(el);
+
+        return () => observer.disconnect();
+      }
+    },
+    [fetchNextPage, hasNextPage, isFetchingNextPage]
   );
 
   return {
@@ -16,5 +48,8 @@ export function useLessonsList({ page }: { page: number }) {
     isPending,
     error,
     isError,
+    refetch,
+    isFetchingNextPage,
+    cursorRef,
   };
 }

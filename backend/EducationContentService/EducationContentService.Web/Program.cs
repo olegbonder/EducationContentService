@@ -29,6 +29,14 @@ try
 
     app.Configure();
 
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<EducationDbContext>();
+        dbContext.Database.EnsureCreated(); // Создает БД без миграций
+                                            // ИЛИ с миграциями:
+                                            // dbContext.Database.Migrate();
+    }
+
     app.Run();
 }
 catch (Exception ex)

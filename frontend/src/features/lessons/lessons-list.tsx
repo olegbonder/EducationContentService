@@ -9,26 +9,23 @@ import {
   CardTitle,
 } from "@/shared/components/ui/card";
 import { Spinner } from "@/shared/components/ui/spinner";
-import { AlertCircle, RefreshCw } from "lucide-react";
+import { AlertCircle } from "lucide-react";
 import { useState } from "react";
 import { CreateLessonDialog } from "./create-lesson-dialog";
 import { LessonCard } from "./lesson-card";
 import { useLessonsList } from "./model/use-lessons-list";
 import { UpdateLessonDialog } from "./update-lesson-dialog";
-import { LessonsPagination } from "./lessons-pagination";
 
 export function LessonsList() {
   const [createOpen, setCreateOpen] = useState(false);
   const [updateOpen, setUpdateOpen] = useState(false);
-  const [page, setPage] = useState(1);
 
   const [selectedLesson, setSelectedLesson] = useState<Lesson | undefined>(
     undefined
   );
 
-  const { lessons, isPending, error, isError, totalPages } = useLessonsList({
-    page,
-  });
+  const { lessons, isPending, error, isError, isFetchingNextPage, cursorRef } =
+    useLessonsList();
 
   if (isPending) {
     return (
@@ -81,13 +78,6 @@ export function LessonsList() {
           />
         ))}
       </div>
-      {totalPages && (
-        <LessonsPagination
-          currentPage={page}
-          totalPages={totalPages}
-          onPageChange={setPage}
-        />
-      )}
 
       <CreateLessonDialog open={createOpen} onOpenChange={setCreateOpen} />
 
@@ -99,6 +89,10 @@ export function LessonsList() {
           onOpenChange={setUpdateOpen}
         />
       )}
+
+      <div ref={cursorRef} className="flex justify-center py-4">
+        {isFetchingNextPage && <Spinner />}
+      </div>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import { apiClient } from "@/shared/api/axios-instance";
 import { Envelope } from "@/shared/api/envelope";
 import { PaginationResponse } from "@/shared/api/types";
-import { queryOptions } from "@tanstack/react-query";
+import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 
 export type CreateLessonRequest = {
   title: string;
@@ -74,6 +74,32 @@ export const lessonsQueryOptions = {
     return queryOptions({
       queryFn: () => lessonsApi.getLessons({ page: page, pageSize: pageSize }),
       queryKey: [lessonsQueryOptions.baseKey, { page }],
+    });
+  },
+
+  getLessonsInfiniteOptions: ({ pageSize }: { pageSize: number }) => {
+    return infiniteQueryOptions({
+      queryKey: [lessonsQueryOptions.baseKey],
+      queryFn: ({ pageParam }) => {
+        return lessonsApi.getLessons({
+          page: pageParam,
+          pageSize: pageSize,
+        });
+      },
+      initialPageParam: 1,
+      getNextPageParam: (response) => {
+        if (!response || response.page >= response.totalPages) {
+          return undefined;
+        }
+        return response.page + 1;
+      },
+      select: (data): PaginationResponse<Lesson> => ({
+        items: data.pages.flatMap((page) => page?.items ?? []),
+        totalCount: data.pages[0]?.totalCount ?? 0,
+        page: data.pages[0]?.page ?? 1,
+        pageSize: data.pages[0]?.pageSize ?? pageSize,
+        totalPages: data.pages[0]?.totalPages ?? 0,
+      }),
     });
   },
 };
