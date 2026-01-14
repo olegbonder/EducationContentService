@@ -1,10 +1,11 @@
 import { lessonsQueryOptions } from "@/entities/lessons/api";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { RefCallback, useCallback } from "react";
+import { LessonsFilter } from "../lessons-list";
 
-const PAGE_SIZE = 3;
+export const PAGE_SIZE = 3;
 
-export function useLessonsList() {
+export function useLessonsList(filter: LessonsFilter) {
   const {
     data,
     isPending,
@@ -15,7 +16,7 @@ export function useLessonsList() {
     isFetchingNextPage,
     hasNextPage,
   } = useInfiniteQuery({
-    ...lessonsQueryOptions.getLessonsInfiniteOptions({ pageSize: PAGE_SIZE }),
+    ...lessonsQueryOptions.getLessonsInfiniteOptions(filter),
   });
 
   const cursorRef: RefCallback<HTMLDivElement> = useCallback(

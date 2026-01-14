@@ -1,3 +1,4 @@
+import { LessonsFilter } from "@/features/lessons/lessons-list";
 import { apiClient } from "@/shared/api/axios-instance";
 import { Envelope } from "@/shared/api/envelope";
 import { PaginationResponse } from "@/shared/api/types";
@@ -77,14 +78,11 @@ export const lessonsQueryOptions = {
     });
   },
 
-  getLessonsInfiniteOptions: ({ pageSize }: { pageSize: number }) => {
+  getLessonsInfiniteOptions: (filter: LessonsFilter) => {
     return infiniteQueryOptions({
-      queryKey: [lessonsQueryOptions.baseKey],
+      queryKey: [lessonsQueryOptions.baseKey, { filter }],
       queryFn: ({ pageParam }) => {
-        return lessonsApi.getLessons({
-          page: pageParam,
-          pageSize: pageSize,
-        });
+        return lessonsApi.getLessons({ ...filter, page: pageParam });
       },
       initialPageParam: 1,
       getNextPageParam: (response) => {
@@ -97,7 +95,7 @@ export const lessonsQueryOptions = {
         items: data.pages.flatMap((page) => page?.items ?? []),
         totalCount: data.pages[0]?.totalCount ?? 0,
         page: data.pages[0]?.page ?? 1,
-        pageSize: data.pages[0]?.pageSize ?? pageSize,
+        pageSize: data.pages[0]?.pageSize ?? filter.pageSize,
         totalPages: data.pages[0]?.totalPages ?? 0,
       }),
     });

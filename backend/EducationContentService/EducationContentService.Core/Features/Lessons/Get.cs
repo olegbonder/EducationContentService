@@ -68,11 +68,16 @@ namespace EducationContentService.Core.Features.Lessons
                 return validationResult.ToError();
             }
 
-            var query = _readDbContext.LessonQuery;
+            var query = _readDbContext.LessonQuery.IgnoreQueryFilters();
 
             if (!string.IsNullOrWhiteSpace(request.Search))
             {
                 query = query.Where(l => l.Title.Value.Contains(request.Search));
+            }
+
+            if (request.IsDeleted.HasValue)
+            {
+                query = query.Where(l => l.IsDeleted == request.IsDeleted.Value);
             }
 
             int lessonsCount = await query.CountAsync(cancellationToken);
