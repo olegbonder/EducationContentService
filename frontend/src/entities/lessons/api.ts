@@ -1,4 +1,4 @@
-import { LessonsFilter } from "@/features/lessons/lessons-list";
+import { LessonsFilterState } from "@/features/lessons/model/lessons-filters-store";
 import { apiClient } from "@/shared/api/axios-instance";
 import { Envelope } from "@/shared/api/envelope";
 import { PaginationResponse } from "@/shared/api/types";
@@ -78,7 +78,7 @@ export const lessonsQueryOptions = {
     });
   },
 
-  getLessonsInfiniteOptions: (filter: LessonsFilter) => {
+  getLessonsInfiniteOptions: (filter: LessonsFilterState) => {
     return infiniteQueryOptions({
       queryKey: [lessonsQueryOptions.baseKey, { filter }],
       queryFn: ({ pageParam }) => {

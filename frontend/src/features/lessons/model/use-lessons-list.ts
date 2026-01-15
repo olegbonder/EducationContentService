@@ -1,11 +1,11 @@
 import { lessonsQueryOptions } from "@/entities/lessons/api";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { RefCallback, useCallback } from "react";
-import { LessonsFilter } from "../lessons-list";
+import { LessonsFilterState } from "./lessons-filters-store";
 
 export const PAGE_SIZE = 3;
 
-export function useLessonsList(filter: LessonsFilter) {
+export function useLessonsList(filter: LessonsFilterState) {
   const {
     data,
     isPending,

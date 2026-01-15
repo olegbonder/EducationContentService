@@ -9,33 +9,20 @@ import {
   CardTitle,
 } from "@/shared/components/ui/card";
 import { Spinner } from "@/shared/components/ui/spinner";
-import { AlertCircle, Search } from "lucide-react";
+import { useGetGlobalSearch } from "@/shared/stores/global-search-store";
+import { AlertCircle, RefreshCw } from "lucide-react";
 import { useState } from "react";
 import { CreateLessonDialog } from "./create-lesson-dialog";
 import { LessonCard } from "./lesson-card";
-import { PAGE_SIZE, useLessonsList } from "./model/use-lessons-list";
+import { LessonsFilters } from "./lessons-filters";
+import { useGetLessonFilter } from "./model/lessons-filters-store";
+import { useLessonsList } from "./model/use-lessons-list";
 import { UpdateLessonDialog } from "./update-lesson-dialog";
-import { useDebounce } from "use-debounce";
-import { Input } from "@/shared/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectTrigger,
-  SelectValue,
-} from "@/shared/components/ui/select";
-import { LessonFilters } from "./lessons-filters";
-
-export type LessonsFilter = {
-  search?: string;
-  isDeleted?: boolean;
-  pageSize: number;
-};
 
 export function LessonsList() {
-  const [search, setSearch] = useState("");
-  const [isDeleted, setIsDeleted] = useState<boolean | undefined>(false);
+  const globalSearch = useGetGlobalSearch();
 
-  const [debouncedSearch] = useDebounce(search, 300);
+  const { search, isDeleted, pageSize } = useGetLessonFilter();
 
   const [createOpen, setCreateOpen] = useState(false);
   const [updateOpen, setUpdateOpen] = useState(false);
@@ -44,8 +31,19 @@ export function LessonsList() {
     undefined
   );
 
-  const { lessons, isPending, error, isError, isFetchingNextPage, cursorRef } =
-    useLessonsList({ search: debouncedSearch, isDeleted, pageSize: PAGE_SIZE });
+  const {
+    lessons,
+    isPending,
+    error,
+    isError,
+    refetch,
+    isFetchingNextPage,
+    cursorRef,
+  } = useLessonsList({
+    search: search === undefined || "" ? globalSearch : search,
+    isDeleted,
+    pageSize,
+  });
 
   if (isError) {
     return (
@@ -62,54 +60,61 @@ export function LessonsList() {
               {error?.message ?? "Произошла неизвестная ошибка"}
             </CardDescription>
           </CardHeader>
-          <CardFooter className="justify-center"></CardFooter>
+          <CardFooter className="justify-center">
+            <Button variant="outline" onClick={() => refetch()}>
+              <RefreshCw className="mr-2 h-4 w-4" />
+              Попробовать снова
+            </Button>
+          </CardFooter>
         </Card>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Уроки</h1>
-        <LessonFilters />
-        <Button onClick={() => setCreateOpen(true)}>Создать урок</Button>
-        <p className="text-muted-foreground">
-          Все доступные уроки курса по .NET разработкеs
-        </p>
-      </div>
+    <>
+      <div className="container mx-auto py-8 px-4">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold mb-2">Уроки</h1>
+          <LessonsFilters />
+          <Button onClick={() => setCreateOpen(true)}>Создать урок</Button>
+          <p className="text-muted-foreground">
+            Все доступные уроки курса по .NET разработкеs
+          </p>
+        </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {isPending ? (
-          <Spinner />
-        ) : (
-          lessons?.map((lesson) => (
-            <LessonCard
-              key={lesson.id}
-              lesson={lesson}
-              onEdit={() => {
-                setSelectedLesson(lesson);
-                setUpdateOpen(true);
-              }}
-            />
-          ))
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {isPending ? (
+            <Spinner />
+          ) : (
+            lessons?.map((lesson) => (
+              <LessonCard
+                key={lesson.id}
+                lesson={lesson}
+                onEdit={() => {
+                  setSelectedLesson(lesson);
+                  setUpdateOpen(true);
+                }}
+              />
+            ))
+          )}
+        </div>
+
+        <CreateLessonDialog open={createOpen} onOpenChange={setCreateOpen} />
+
+        {selectedLesson && (
+          <UpdateLessonDialog
+            key={selectedLesson.id}
+            lesson={selectedLesson}
+            open={selectedLesson !== undefined && updateOpen}
+            onOpenChange={setUpdateOpen}
+          />
         )}
+
+        <div ref={cursorRef} className="flex justify-center py-4">
+          {isFetchingNextPage && <Spinner />}
+        </div>
       </div>
-
-      <CreateLessonDialog open={createOpen} onOpenChange={setCreateOpen} />
-
-      {selectedLesson && (
-        <UpdateLessonDialog
-          key={selectedLesson.id}
-          lesson={selectedLesson}
-          open={selectedLesson !== undefined && updateOpen}
-          onOpenChange={setUpdateOpen}
-        />
-      )}
-
-      <div ref={cursorRef} className="flex justify-center py-4">
-        {isFetchingNextPage && <Spinner />}
-      </div>
-    </div>
+    </>
   );
 }
