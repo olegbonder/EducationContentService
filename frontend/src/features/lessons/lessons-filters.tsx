@@ -18,20 +18,13 @@ import {
 export function LessonsFilters() {
   const { search, isDeleted } = useGetLessonFilter();
 
-  const [localSearch, setLocalSearch] = useState<string>(search ?? "");
-  const [debouncedSearch] = useDebounce(localSearch, 300);
-
-  useEffect(() => {
-    setFilterSearch(debouncedSearch);
-  }, [debouncedSearch]);
-
   return (
     <div className="flex gap-4 mb-4">
       <div className="relative flex-1">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
-          value={localSearch}
-          onChange={(e) => setLocalSearch(e.target.value)}
+          value={search}
+          onChange={(e) => setFilterSearch(e.target.value)}
           placeholder="Поиск по названию..."
           className="pl-9"
         />

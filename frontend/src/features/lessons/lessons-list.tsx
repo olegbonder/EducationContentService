@@ -40,7 +40,7 @@ export function LessonsList() {
     isFetchingNextPage,
     cursorRef,
   } = useLessonsList({
-    search: search === undefined || "" ? globalSearch : search,
+    search: search === "" || "" ? globalSearch : search,
     isDeleted,
     pageSize,
   });

@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { PAGE_SIZE } from "./use-lessons-list";
 import { useShallow } from "zustand/react/shallow";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 export type LessonsFilterState = {
   search?: string;
@@ -21,12 +22,21 @@ const initialState: LessonsFilterState = {
   pageSize: PAGE_SIZE,
 };
 
-const useLessonsFilterStore = create<LessonsFilterStore>((set) => ({
-  ...initialState,
-  setSearch: (input: LessonsFilterState["search"]) =>
-    set(() => ({ search: input?.trim() || undefined })),
-  setIsDeleted: (isDeleted: boolean | undefined) => set(() => ({ isDeleted })),
-}));
+const useLessonsFilterStore = create<LessonsFilterStore>()(
+  persist(
+    (set) => ({
+      ...initialState,
+      setSearch: (input: LessonsFilterState["search"]) =>
+        set(() => ({ search: input?.trim() || undefined })),
+      setIsDeleted: (isDeleted: boolean | undefined) =>
+        set(() => ({ isDeleted })),
+    }),
+    {
+      name: "es-lessons-filters",
+      storage: createJSONStorage(() => localStorage),
+    },
+  ),
+);
 
 export const useGetLessonFilter = () => {
   return useLessonsFilterStore(
@@ -34,7 +44,7 @@ export const useGetLessonFilter = () => {
       search: state.search,
       isDeleted: state.isDeleted,
       pageSize: state.pageSize,
-    }))
+    })),
   );
 };
 

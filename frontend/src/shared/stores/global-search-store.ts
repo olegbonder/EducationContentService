@@ -20,10 +20,13 @@ const useGlobalSearchStore = create<GlobalSearchStore>()(
     (set) => ({
       ...initialState,
       setSearch: (input: GlobalSearchState["globalSearch"]) =>
-        set(() => ({ globalSearch: input?.trim() || undefined })),
+        set(() => ({ globalSearch: input?.trim() || "" })),
     }),
-    { name: "global-search", storage: createJSONStorage(() => localStorage) }
-  )
+    {
+      name: "es-global-search",
+      storage: createJSONStorage(() => localStorage),
+    },
+  ),
 );
 
 export const useGetGlobalSearch = () => {
