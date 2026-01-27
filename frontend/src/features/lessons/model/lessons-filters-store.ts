@@ -5,12 +5,14 @@ import { useShallow } from "zustand/react/shallow";
 export type LessonsFilterState = {
   search?: string;
   isDeleted?: boolean;
+  categoryIds?: string[]; // Новый фильтр для категорий
   pageSize: number;
 };
 
 type Actions = {
   setSearch: (input: LessonsFilterState["search"]) => void;
   setIsDeleted: (isDeleted: LessonsFilterState["isDeleted"]) => void;
+  setCategoryIds: (categoryIds: LessonsFilterState["categoryIds"]) => void;
 };
 
 type LessonsFilterStore = LessonsFilterState & Actions;
@@ -18,6 +20,7 @@ type LessonsFilterStore = LessonsFilterState & Actions;
 const initialState: LessonsFilterState = {
   search: "",
   isDeleted: undefined,
+  categoryIds: [], // Инициализируем пустым массивом
   pageSize: PAGE_SIZE,
 };
 
@@ -26,6 +29,8 @@ const useLessonsFilterStore = create<LessonsFilterStore>((set) => ({
   setSearch: (input: LessonsFilterState["search"]) =>
     set(() => ({ search: input?.trim() || undefined })),
   setIsDeleted: (isDeleted: boolean | undefined) => set(() => ({ isDeleted })),
+  setCategoryIds: (categoryIds: LessonsFilterState["categoryIds"]) =>
+    set(() => ({ categoryIds: categoryIds || [] })),
 }));
 
 export const useGetLessonFilter = () => {
@@ -33,6 +38,7 @@ export const useGetLessonFilter = () => {
     useShallow((state) => ({
       search: state.search,
       isDeleted: state.isDeleted,
+      categoryIds: state.categoryIds,
       pageSize: state.pageSize,
     }))
   );
@@ -44,4 +50,8 @@ export const setFilterSearch = (input: LessonsFilterState["search"]) => {
 
 export const setFilterIsDeleted = (input: LessonsFilterState["isDeleted"]) => {
   return useLessonsFilterStore.getState().setIsDeleted(input);
+};
+
+export const setFilterCategoryIds = (input: LessonsFilterState["categoryIds"]) => {
+  return useLessonsFilterStore.getState().setCategoryIds(input);
 };
