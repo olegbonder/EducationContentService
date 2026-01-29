@@ -25,14 +25,23 @@ const initialState: LessonsFilterState = {
   pageSize: PAGE_SIZE,
 };
 
-const useLessonsFilterStore = create<LessonsFilterStore>((set) => ({
-  ...initialState,
-  setSearch: (input: LessonsFilterState["search"]) =>
-    set(() => ({ search: input?.trim() || undefined })),
-  setIsDeleted: (isDeleted: boolean | undefined) => set(() => ({ isDeleted })),
-  setCategoryIds: (categoryIds: LessonsFilterState["categoryIds"]) =>
-    set(() => ({ categoryIds })),
-}));
+const useLessonsFilterStore = create<LessonsFilterStore>()(
+  persist(
+    (set) => ({
+      ...initialState,
+      setSearch: (input: LessonsFilterState["search"]) =>
+        set(() => ({ search: input?.trim() || undefined })),
+      setIsDeleted: (isDeleted: boolean | undefined) =>
+        set(() => ({ isDeleted })),
+      setCategoryIds: (categoryIds: LessonsFilterState["categoryIds"]) =>
+        set(() => ({ categoryIds: categoryIds || [] })),
+    }),
+    {
+      name: "es-lessons-filters",
+      storage: createJSONStorage(() => localStorage),
+    },
+  ),
+);
 
 export const useGetLessonFilter = () => {
   return useLessonsFilterStore(
