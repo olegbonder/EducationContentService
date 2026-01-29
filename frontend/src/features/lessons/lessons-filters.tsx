@@ -48,7 +48,7 @@ export function LessonsFilters() {
     setIsLoading(true);
 
     // Имитация асинхронной загрузки данных
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     const currentPage = pageRef.current;
     const newCategories: Option[] = [

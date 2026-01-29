@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { PAGE_SIZE } from "./use-lessons-list";
 import { useShallow } from "zustand/react/shallow";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 export type LessonsFilterState = {
   search?: string;
@@ -30,7 +31,7 @@ const useLessonsFilterStore = create<LessonsFilterStore>((set) => ({
     set(() => ({ search: input?.trim() || undefined })),
   setIsDeleted: (isDeleted: boolean | undefined) => set(() => ({ isDeleted })),
   setCategoryIds: (categoryIds: LessonsFilterState["categoryIds"]) =>
-    set(() => ({ categoryIds: categoryIds || [] })),
+    set(() => ({ categoryIds })),
 }));
 
 export const useGetLessonFilter = () => {
@@ -40,7 +41,7 @@ export const useGetLessonFilter = () => {
       isDeleted: state.isDeleted,
       categoryIds: state.categoryIds,
       pageSize: state.pageSize,
-    }))
+    })),
   );
 };
 
@@ -52,6 +53,8 @@ export const setFilterIsDeleted = (input: LessonsFilterState["isDeleted"]) => {
   return useLessonsFilterStore.getState().setIsDeleted(input);
 };
 
-export const setFilterCategoryIds = (input: LessonsFilterState["categoryIds"]) => {
+export const setFilterCategoryIds = (
+  input: LessonsFilterState["categoryIds"],
+) => {
   return useLessonsFilterStore.getState().setCategoryIds(input);
 };

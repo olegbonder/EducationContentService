@@ -2,10 +2,12 @@ import { lessonsQueryOptions } from "@/entities/lessons/api";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { RefCallback, useCallback } from "react";
 import { LessonsFilterState } from "./lessons-filters-store";
+import { useDebounce } from "use-debounce";
 
 export const PAGE_SIZE = 3;
 
 export function useLessonsList(filter: LessonsFilterState) {
+  const [debouncedSearch] = useDebounce(filter.search, 300);
   const {
     data,
     isPending,
@@ -16,7 +18,11 @@ export function useLessonsList(filter: LessonsFilterState) {
     isFetchingNextPage,
     hasNextPage,
   } = useInfiniteQuery({
-    ...lessonsQueryOptions.getLessonsInfiniteOptions(filter),
+    ...lessonsQueryOptions.getLessonsInfiniteOptions({
+      search: debouncedSearch,
+      isDeleted: filter.isDeleted,
+      pageSize: filter.pageSize,
+    }),
   });
 
   const cursorRef: RefCallback<HTMLDivElement> = useCallback(
@@ -29,7 +35,7 @@ export function useLessonsList(filter: LessonsFilterState) {
         },
         {
           threshold: 0.5,
-        }
+        },
       );
 
       if (el) {
@@ -38,7 +44,7 @@ export function useLessonsList(filter: LessonsFilterState) {
         return () => observer.disconnect();
       }
     },
-    [fetchNextPage, hasNextPage, isFetchingNextPage]
+    [fetchNextPage, hasNextPage, isFetchingNextPage],
   );
 
   return {
