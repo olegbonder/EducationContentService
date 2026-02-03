@@ -4,4 +4,5 @@ export const routes = {
   todo: "/todo",
   profile: "/profile",
   lessons: "/lessons",
+  tree: "/tree",
 };

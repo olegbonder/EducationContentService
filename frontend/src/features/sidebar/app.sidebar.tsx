@@ -1,7 +1,13 @@
 "use client";
 
 import { routes } from "@/shared/routes";
-import { BookOpenCheck, Home, ListTodo, Plus } from "lucide-react";
+import {
+  BookOpenCheck,
+  Home,
+  ListTodo,
+  Plus,
+  TreePalmIcon,
+} from "lucide-react";
 import Link from "next/link";
 import {
   Sidebar,
@@ -21,6 +27,7 @@ const menuItems = [
   { href: routes.counter, label: "Счетчик", icon: Plus },
   { href: routes.todo, label: "Список дел", icon: ListTodo },
   { href: routes.lessons, label: "Уроки", icon: BookOpenCheck },
+  { href: routes.tree, label: "Дерево", icon: TreePalmIcon },
 ];
 
 export default function AppSideBar() {

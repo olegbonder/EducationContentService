@@ -12,12 +12,16 @@
       "cwd": "${workspaceFolder}/frontend"
     },
     {
-      "name": "Launch Chrome against localhost",
-      "type": "chrome",
+      "name": "Launch Yandex Browser against localhost",
+      "type": "chrome", // Используем chrome тип, так как отладчик один для Chromium-базированных браузеров
       "request": "launch",
       "url": "http://localhost:3000",
       "webRoot": "${workspaceFolder}/frontend",
-      "sourceMaps": true
+      "sourceMaps": true,
+      "runtimeExecutable": "C:/Users/u21806410/AppData/Local/Yandex/YandexBrowser/Application/browser.exe", // Путь к Yandex Browser
+      "runtimeArgs": [
+        "--remote-debugging-port=9222" // Порт для отладки
+      ]
     }
   ]
 }
