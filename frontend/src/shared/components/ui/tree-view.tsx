@@ -2,10 +2,9 @@
 
 import React from 'react'
 import * as AccordionPrimitive from '@radix-ui/react-accordion'
-import { ChevronRight } from 'lucide-react'
+import { ChevronRight, Folder, FolderOpen } from 'lucide-react'
 import { cva } from 'class-variance-authority'
 import { cn } from '@/shared/lib/utils'
-import { Skeleton } from './skeleton'
 
 const treeVariants = cva(
     'group hover:before:opacity-100 before:absolute before:rounded-lg before:left-0 px-2 before:w-full before:opacity-0 before:bg-accent/70 before:h-[2rem] before:-z-10'
@@ -32,9 +31,6 @@ interface TreeDataItem {
     droppable?: boolean
     disabled?: boolean
     className?: string
-    isLoading?: boolean
-    showLoadMore?: boolean
-    loadMoreHandler?: () => void
 }
 
 type TreeRenderItemParams = {
@@ -357,29 +353,6 @@ const TreeNode = ({
                         renderItem={renderItem}
                         level={level + 1}
                     />
-                    {/* Render load more button if needed */}
-                    {item.showLoadMore && (
-                        <div className="ml-4 pl-1 border-l flex items-center">
-                            <div
-                                onClick={item.loadMoreHandler}
-                                className={`text-xs text-blue-500 hover:text-blue-700 border border-blue-300 rounded px-2 py-1 mt-1 mb-1 cursor-pointer ${
-                                    item.isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-50'
-                                }`}
-                            >
-                                {item.isLoading ? 'Загрузка...' : 'Показать ещё'}
-                            </div>
-                        </div>
-                    )}
-                    {/* Render skeleton loading indicators when loading more items */}
-                    {item.isLoading && item.showLoadMore && (
-                        <div className="ml-8 pl-1 border-l">
-                            {[...Array(3)].map((_, idx) => (
-                                <div key={idx} className="py-1 pl-4">
-                                    <Skeleton className="h-4 w-32" />
-                                </div>
-                            ))}
-                        </div>
-                    )}
                 </AccordionContent>
             </AccordionPrimitive.Item>
         </AccordionPrimitive.Root>

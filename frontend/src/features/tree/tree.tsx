@@ -1,176 +1,226 @@
-import React, { useState } from 'react';
-import { TreeView, TreeDataItem } from "@/shared/components/ui/tree-view";
+"use client";
+
+import {
+  TreeDataItem,
+  TreeView,
+  TreeRenderItemParams,
+} from "@/shared/components/ui/tree-view";
+import { Folder, FolderOpen, File, Check, X } from "lucide-react";
 import { Skeleton } from "@/shared/components/ui/skeleton";
-import { Folder, File, FolderOpen, CircleX, CircleCheck } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/shared/components/ui/tooltip';
-import { useLazyTree } from '@/entities/department/hooks/useLazyTree';
-import { DepartmentWithChildren } from '@/entities/department/api/department-api';
-
-// Enhanced tree item with all the requested features
-interface EnhancedTreeItem extends TreeDataItem {
-  depth?: number;
-  path?: string;
-  hasMoreChildren?: boolean;
-  isActive?: boolean;
-  isLoading?: boolean;
-  loadMoreHandler?: () => void;
-  showLoadMore?: boolean;
-}
-
-const EnhancedTreeItem: React.FC<{
-  item: EnhancedTreeItem;
-  level: number;
-  isOpen?: boolean;
-  hasChildren?: boolean;
-}> = ({ item, level, isOpen, hasChildren }) => {
-  const paddingClass = `pl-${Math.max(4, level * 4)}`;
-
-  // Choose icon based on state (open/closed) and whether item has children
-  let IconComponent = File; // Default to File icon
-
-  if (hasChildren) {
-    if (isOpen) {
-      IconComponent = FolderOpen; // Use open folder when expanded
-    } else {
-      IconComponent = Folder; // Use closed folder when collapsed
-    }
-  }
-
-  return (
-    <div className={`flex items-center py-2 ${paddingClass}`}>
-      {/* Icon based on whether item has children and its open/closed state */}
-      <IconComponent className={`h-4 w-4 shrink-0 mr-2 ${item.isActive === false ? 'text-gray-400' : ''}`} />
-
-      {/* Name with tooltip for path */}
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <span
-              className={`text-sm truncate ${item.isActive === false ? 'text-gray-400 line-through' : ''}`}
-            >
-              {item.name}
-            </span>
-          </TooltipTrigger>
-          {item.path && (
-            <TooltipContent>
-              <p>{item.path}</p>
-            </TooltipContent>
-          )}
-        </Tooltip>
-      </TooltipProvider>
-
-      {/* Status indicator for active/inactive */}
-      {item.isActive === false && <CircleX className="h-3 w-3 ml-1 text-red-500" />}
-      {item.isActive === true && <CircleCheck className="h-3 w-3 ml-1 text-green-500" />}
-    </div>
-  );
-};
-
-const LoadingSkeleton: React.FC<{ level: number }> = ({ level }) => {
-  const paddingClass = `pl-${Math.max(8, (level + 1) * 4)}`; // Increase indentation to match children level
-  return (
-    <div className={`py-1 ${paddingClass}`}>
-      <Skeleton className="h-4 w-32" />
-    </div>
-  );
-};
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/shared/components/ui/tooltip";
+import React from "react";
 
 export default function Tree() {
-  const {
-    initializeTree,
-    loadChildren,
-    loadMoreChildren,
-    hasMoreChildren,
-    isLoading,
-    getRootNodes,
-    treeState
-  } = useLazyTree();
+  const [loadingNodes, setLoadingNodes] = React.useState<Set<string>>(
+    new Set(),
+  );
+  const [expandedNodes, setExpandedNodes] = React.useState<Set<string>>(
+    new Set(),
+  );
 
-  const [initialized, setInitialized] = useState(false);
+  interface Department extends TreeDataItem {
+    isActive: boolean;
+    path: string;
+    hasMore: boolean;
+  }
+  const data: Department[] = [
+    {
+      id: "1",
+      name: "Item 1",
+      path: "root",
+      isActive: true,
+      hasMore: true,
+      children: [
+        {
+          id: "2",
+          name: "Item 1.1",
+          path: "root.item11",
+          isActive: false,
+          children: [
+            {
+              id: "3",
+              name: "Item 1.1.1",
+              path: "root.item11.item111",
+              isActive: false,
+            },
+            {
+              id: "4",
+              name: "Item 1.1.2",
+              path: "root.item11.item112",
+              isActive: false,
+            },
+          ],
+        },
+        {
+          id: "5",
+          name: "Item 1.2 (disabled)",
+          path: "root.item12",
+          isActive: false,
+          disabled: true,
+        },
+      ],
+    },
+    {
+      id: "6",
+      name: "Item 2 (draggable)",
+      path: "root2",
+      isActive: false,
+      draggable: true,
+    },
+  ];
 
-  // Initialize the tree on mount
-  React.useEffect(() => {
-    if (!initialized) {
-      initializeTree();
-      setInitialized(true);
-    }
-  }, [initializeTree, initialized]);
+  // Функция для обработки раскрытия/сворачивания узла
+  const handleNodeToggle = (itemId: string) => {
+    setExpandedNodes((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(itemId)) {
+        // Сворачивание - удаляем из раскрытых, но не показываем загрузку
+        newSet.delete(itemId);
+        return newSet;
+      } else {
+        // Раскрытие - показываем состояние загрузки
+        setLoadingNodes((loadPrev) => new Set(loadPrev).add(itemId));
 
-  // Convert department data to tree-compatible format
-  const convertToTreeData = (departments: DepartmentWithChildren[]): EnhancedTreeItem[] => {
-    return departments.map(dep => {
-      const hasChildren = dep.children && dep.children.length > 0;
-      const hasMore = hasChildren && hasMoreChildren(dep.id);
-      const isCurrentlyLoading = isLoading(dep.id);
+        // Симулируем задержку при загрузке
+        setTimeout(() => {
+          setLoadingNodes((loadPrev) => {
+            const updatedSet = new Set(loadPrev);
+            updatedSet.delete(itemId);
+            return updatedSet;
+          });
 
-      const treeItem: EnhancedTreeItem = {
-        id: dep.id,
-        name: dep.name,
-        depth: dep.depth,
-        path: dep.path,
-        isActive: dep.isActive,
-        hasMoreChildren: dep.hasMoreChildren,
-        isLoading: isCurrentlyLoading,
+          // После "загрузки" добавляем узел в раскрытые
+          setExpandedNodes((expPrev) => new Set(expPrev).add(itemId));
+        }, 1000);
 
-        // Custom icon logic
-        icon: dep.children && dep.children.length > 0 ? Folder : File,
-        openIcon: FolderOpen,
-        selectedIcon: dep.isActive === false ? CircleX : CircleCheck,
-
-        // Custom rendering
-        className: dep.isActive === false ? 'opacity-60 line-through' : '',
-
-        // Click handler to load children if needed
-        onClick: dep.hasMoreChildren && (!dep.children || dep.children.length === 0)
-          ? () => loadChildren(dep.id)
-          : undefined,
-      };
-
-      // Add children if they exist
-      if (hasChildren) {
-        treeItem.children = convertToTreeData(dep.children!);
+        return prev; // Возвращаем старое состояние до завершения асинхронной операции
       }
-
-      // Add load more button if needed
-      if (hasMore) {
-        treeItem.showLoadMore = true;
-        treeItem.loadMoreHandler = () => loadMoreChildren(dep.id);
-      }
-
-      return treeItem;
     });
   };
 
-  const rootNodes = getRootNodes();
-  const treeData = convertToTreeData(rootNodes);
+  const renderItem = ({
+    item,
+    level,
+    isLeaf,
+    isSelected,
+    isOpen,
+    hasChildren,
+  }: TreeRenderItemParams) => {
+    let IconComponent;
+    const isLoading = loadingNodes.has(item.id);
+    const isActuallyExpanded = expandedNodes.has(item.id);
 
-  // Custom renderer to handle all the requested features
-  const customRenderer = (params: {
-    item: EnhancedTreeItem;
-    level: number;
-    isLeaf: boolean;
-    isSelected: boolean;
-    isOpen?: boolean;
-    hasChildren: boolean;
-  }) => {
-    const { item, level, isLeaf, isOpen, hasChildren } = params;
+    if (hasChildren) {
+      if (isActuallyExpanded && !isLoading) {
+        IconComponent = FolderOpen;
+      } else {
+        IconComponent = Folder;
+      }
+    } else {
+      // Для листьев используем иконку файла
+      IconComponent = File;
+    }
+
+    // Функция для получения пути к узлу
+    const getNodePath = (
+      currentItem: TreeDataItem,
+      allData: TreeDataItem[],
+    ): string => {
+      // Создаем плоский массив всех узлов с информацией о родителях
+      const findPath = (
+        nodes: TreeDataItem[],
+        currentPath: string = "",
+      ): string | null => {
+        for (const node of nodes) {
+          const newPath = currentPath
+            ? `${currentPath} / ${node.name}`
+            : node.name;
+
+          if (node.id === currentItem.id) {
+            return newPath;
+          }
+
+          if (node.children) {
+            const foundPath = findPath(node.children, newPath);
+            if (foundPath) {
+              return foundPath;
+            }
+          }
+        }
+        return null;
+      };
+
+      return findPath(allData) || currentItem.name;
+    };
+
+    // Приведение типа для доступа к дополнительному свойству isActive
+    const itemWithIsActive = item as TreeDataItem & { isActive?: boolean };
+
+    const itemPath = getNodePath(item, data);
+
+    const content = (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div className="flex items-center justify-between w-full">
+              <div className="flex items-center">
+                <IconComponent className="h-4 w-4 shrink-0 mr-2" />
+                <span className="text-sm truncate">{item.name}</span>
+              </div>
+              {typeof itemWithIsActive.isActive !== "undefined" && (
+                <div className="ml-2 flex items-center">
+                  {itemWithIsActive.isActive ? (
+                    <Check className="w-4 h-4 text-green-500" />
+                  ) : (
+                    <X className="w-4 h-4 text-red-500" />
+                  )}
+                </div>
+              )}
+            </div>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>{itemPath}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
 
     return (
-      <div className="w-full">
-        <EnhancedTreeItem item={item} level={level} isOpen={isOpen} hasChildren={hasChildren} />
-
+      <div>
+        {content}
+        {/* Показываем skeleton-элементы как дочерние при загрузке */}
+        {isLoading && (
+          <div className="ml-4 pl-1 border-l mt-1 space-y-1">
+            {[...Array(3)].map((_, index) => (
+              <div key={index} className="flex items-center py-1">
+                <Skeleton className="h-4 w-4 shrink-0 mr-2 rounded" />
+                <Skeleton className="h-4 w-16 rounded" />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     );
   };
 
   return (
-    <div className="p-4">
-      <TreeView
-        data={treeData}
-        renderItem={customRenderer}
-        defaultNodeIcon={Folder}
-        defaultLeafIcon={File}
-      />
-    </div>
+    <TooltipProvider>
+      <div>
+        <TreeView
+          data={data}
+          renderItem={renderItem}
+          onSelectChange={(item) => {
+            if (item && item.children && item.children.length > 0) {
+              handleNodeToggle(item.id);
+            }
+          }}
+        />
+      </div>
+    </TooltipProvider>
   );
 }

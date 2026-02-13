@@ -1,7 +1,7 @@
 "use client";
 
-import Tree from "@/features/tree/tree";
+import TreeNew from "@/features/tree/tree-new";
 
 export default function Home() {
-  return <Tree />;
+  return <TreeNew />;
 }
