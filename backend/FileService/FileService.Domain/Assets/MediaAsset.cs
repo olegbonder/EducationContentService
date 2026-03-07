@@ -38,13 +38,4 @@
             UpdatedAt = CreatedAt;
         }
     }
-
-    public enum MediaStatus
-    {
-        UPLOADING,
-        UPLOADED,
-        READY,
-        FAILED,
-        DELETED
-    }
 }
