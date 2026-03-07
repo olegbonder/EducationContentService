@@ -34,7 +34,7 @@ public sealed record StorageKey
             return normalizedKeyResult.Error;
         }
             
-        var normalizedPrefixResult = NormalizeSegment(prefix);
+        var normalizedPrefixResult = NormalizePrefix(prefix);
         if (normalizedPrefixResult.IsFailure)
         {
             return normalizedPrefixResult.Error;
