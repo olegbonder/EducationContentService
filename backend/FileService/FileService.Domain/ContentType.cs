@@ -6,12 +6,12 @@ namespace FileService.Domain
     public sealed record ContentType
     {
         public string Value { get; }
-        public MediaType MediaType { get; set; }
+        public MediaType Category { get; set; }
 
-        private ContentType(string value, MediaType mediaType)
+        private ContentType(string value, MediaType category)
         {
             Value = value;
-            MediaType = mediaType;
+            Category = category;
         }
 
         public static Result<ContentType, Error> Create(string contentType)

@@ -33,7 +33,7 @@ public class VideoAsset: MediaAsset
             return Error.Validation("video.invalid.extension", $"File extension must be one of: {string.Join(", ", AllowedExtensions)}");
         }
 
-        if (mediaData.ContentType.MediaType == MediaType.VIDEO)
+        if (mediaData.ContentType.Category == MediaType.VIDEO)
         {
             return Error.Validation("video.invalid.content-type", $"File content type must be {ALLOWED_CONTENT_TYPE}");
         }
