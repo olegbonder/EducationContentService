@@ -9,4 +9,7 @@ public record S3Options
     public int DownloadExpirationHours { get; init; } = 24;
 
     public IReadOnlyList<string> RequiredBuckets { get; init; } = [];
+    public double UploadUrlExpirationHours { get; init; } = 1;
+
+    public int MaxConcurrentRequests { get; init; } = 20;
 }

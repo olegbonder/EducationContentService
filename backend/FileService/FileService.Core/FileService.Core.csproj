@@ -4,6 +4,7 @@
     <PackageReference Include="Framework" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FileService.Contracts\FileService.Contracts.csproj" />
     <ProjectReference Include="..\FileService.Domain\FileService.Domain.csproj" />
   </ItemGroup>
 </Project>
