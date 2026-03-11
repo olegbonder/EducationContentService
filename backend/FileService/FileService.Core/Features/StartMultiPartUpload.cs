@@ -35,6 +35,7 @@ public sealed class StartMultiPartUploadHandler
 
     public async Task Handle(StartMultiPartUploadRequest request, CancellationToken cancellationToken)
     {
+
         var startUploadResult = await _s3Provider.StartMultiPartUploadAsync();
         
     }
