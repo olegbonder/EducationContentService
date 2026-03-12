@@ -15,7 +15,7 @@ namespace FileService.Domain
             Extension = extension;
         }
 
-        private static Result<FileName, Error> Create(string fileName)
+        public static Result<FileName, Error> Create(string fileName)
         {
             if (string.IsNullOrWhiteSpace(fileName))
             {

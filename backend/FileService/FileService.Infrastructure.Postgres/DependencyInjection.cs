@@ -1,4 +1,5 @@
 ﻿using FileService.Core;
+using FileService.Infrastructure.Postgres.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

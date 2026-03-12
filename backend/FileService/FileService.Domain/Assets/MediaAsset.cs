@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using Shared.SharedKernel;
 
 namespace FileService.Domain.Assets
 {
@@ -38,7 +39,7 @@ namespace FileService.Domain.Assets
             UpdatedAt = CreatedAt;
         }
 
-        public static Result<MediaAsset, Error> CreateForUpload(MediaData mediaData,  AssetType assetType, MediaOwner owner)
+        public static Result<MediaAsset, Error> CreateForUpload(MediaData mediaData,  AssetType assetType)
         {
             var assetId = Guid.NewGuid();
 
@@ -53,6 +54,16 @@ namespace FileService.Domain.Assets
                 default:
                     throw new ArgumentOutOfRangeException(nameof(assetType), assetType, null);
             }
+        }
+
+        public Result MarkUploaded()
+        {
+            if (Status == MediaStatus.UPLOADING)
+                return Result.Success();
+
+            Status = MediaStatus.UPLOADED;
+            UpdatedAt = DateTime.UtcNow;
+            return Result.Success();
         }
     }
 }
