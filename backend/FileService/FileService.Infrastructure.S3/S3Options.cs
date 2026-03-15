@@ -6,7 +6,7 @@ public record S3Options
     public string AccessKey { get; init; } = string.Empty;
     public string SecretKey { get; init; } = string.Empty;
     public bool WithSsl { get; init; }
-    public int DownloadExpirationHours { get; init; } = 24;
+    public int DownloadExpirationDays { get; init; } = 6;
 
     public IReadOnlyList<string> RequiredBuckets { get; init; } = [];
     public double UploadUrlExpirationHours { get; init; } = 1;

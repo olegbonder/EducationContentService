@@ -3,6 +3,7 @@ using Amazon.S3.Model;
 using CSharpFunctionalExtensions;
 using FileService.Contracts;
 using FileService.Core.FilesStorage;
+using FileService.Core.Models;
 using FileService.Domain;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -104,12 +105,48 @@ public class S3Provider: IS3Provider
                 BucketName = storageKey.Location,
                 Key = storageKey.Value,
                 Verb = HttpVerb.GET,
-                Expires = DateTime.UtcNow.AddHours(_s3Options.DownloadExpirationHours),
+                Expires = DateTime.UtcNow.AddDays(_s3Options.DownloadExpirationDays),
                 Protocol = _s3Options.WithSsl ? Protocol.HTTPS : Protocol.HTTP
             };
             string? response = await _s3Client.GetPreSignedURLAsync(request);
 
             return response;
+        }
+        catch (Exception ex)
+        {
+            return S3ErrorMapper.ToError(ex);
+        }
+    }
+
+    public async Task<Result<IReadOnlyList<MediaUrl>, Error>> GenerateDownloadUrlsAsync(IEnumerable<StorageKey> storageKeys)
+    {
+        try
+        {
+            var tasks = storageKeys.Select(async storageKey =>
+            {
+                await _requestsSemaphore.WaitAsync();
+                try
+                {
+                    var request = new GetPreSignedUrlRequest
+                    {
+                        BucketName = storageKey.Location,
+                        Key = storageKey.Value,
+                        Verb = HttpVerb.GET,
+                        Expires = DateTime.UtcNow.AddDays(_s3Options.DownloadExpirationDays),
+                        Protocol = _s3Options.WithSsl ? Protocol.HTTPS : Protocol.HTTP
+                    };
+                    string? response = await _s3Client.GetPreSignedURLAsync(request);
+
+                    return new MediaUrl(storageKey, response);
+                }
+                finally
+                {
+                    _requestsSemaphore.Release();
+                }
+            });
+
+            var results =  await Task.WhenAll(tasks);
+            return results;
         }
         catch (Exception ex)
         {
@@ -126,7 +163,7 @@ public class S3Provider: IS3Provider
                 BucketName = storageKey.Location,
                 Key = storageKey.Value,
                 Verb = HttpVerb.PUT,
-                Expires = DateTime.UtcNow.AddHours(_s3Options.DownloadExpirationHours),
+                Expires = DateTime.UtcNow.AddHours(_s3Options.UploadUrlExpirationHours),
                 Protocol = _s3Options.WithSsl ? Protocol.HTTPS : Protocol.HTTP
             };
             string? response = await _s3Client.GetPreSignedURLAsync(request);
@@ -163,5 +200,5 @@ public class S3Provider: IS3Provider
         {
             return S3ErrorMapper.ToError(ex);
         }
-    }
+    }    
 }
