@@ -10,6 +10,7 @@ namespace FileService.Domain.Assets
         public MediaData MediaData { get; protected set; } = null!;
 
         public AssetType AssetType { get; protected set; }
+        //public MediaOwner Owner { get; protected set; }
 
         public DateTime CreatedAt { get; protected set; } = DateTime.UtcNow;
 
@@ -27,7 +28,6 @@ namespace FileService.Domain.Assets
             MediaData mediaData,
             MediaStatus status,
             AssetType assetType,
-            MediaOwner owner,
             StorageKey key)
         {
             Id = id;

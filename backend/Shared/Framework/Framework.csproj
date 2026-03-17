@@ -30,7 +30,7 @@
   
   <PropertyGroup>
     <PackageId>Framework</PackageId>
-    <Version>0.0.2</Version>
+    <Version>0.0.3</Version>
     <Authors>Manuilov Oleg</Authors>
     <PackageDescription>Web app Project</PackageDescription>
     <RepositoryUrl>https://github.com/olegbonder/EducationContentService</RepositoryUrl>

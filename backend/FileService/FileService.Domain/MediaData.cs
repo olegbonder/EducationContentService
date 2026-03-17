@@ -5,6 +5,10 @@ namespace FileService.Domain
 {
     public sealed record MediaData
     {
+        // EF Core
+        private MediaData()
+        {
+        }
         public FileName FileName { get; }
 
         public ContentType ContentType { get; }

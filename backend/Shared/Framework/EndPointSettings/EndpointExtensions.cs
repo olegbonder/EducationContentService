@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Framework.EndPointSettings
 {
-    internal static class EndpointExtensions
+    public static class EndpointExtensions
     {
         public static IServiceCollection AddEndpoints(this IServiceCollection services, Assembly assembly)
         {

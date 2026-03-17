@@ -1,5 +1,6 @@
 using Serilog;
 using System.Globalization;
+using FileService.Web.Configuration;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
@@ -18,13 +19,11 @@ try
 
     builder.Configuration.AddEnvironmentVariables();
 
-    //builder.Services.AddConfiguration(builder.Configuration);
-
-    //builder.Services.AddScoped<ILessonsRepository, LessonsRepository>();
+    builder.Services.AddConfiguration(builder.Configuration);
 
     var app = builder.Build();
 
-    //app.Configure();
+    app.Configure();
 
     app.Run();
 }
@@ -36,3 +35,5 @@ finally
 {
     Log.CloseAndFlush();
 }
+
+public partial class Program;

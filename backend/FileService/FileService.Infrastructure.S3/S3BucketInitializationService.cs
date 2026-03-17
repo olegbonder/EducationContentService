@@ -72,21 +72,18 @@ public class S3BucketInitializationService: BackgroundService
             await _s3Client.PutBucketAsync(putBucketRequest, cancellationToken);
 
             string policy = $$"""
-                               {
-                                   {
-                                   "Version": "2012-10-17",
-                                   "Statement": [
-                                       {
-                                           "Effect": "Allow",
-                                           "Principal": {
-                                            "AWS": [""]
-                                           },
-                                           "Action": ["s3:GetObject"],
-                                           "Resource": ["arn:aws:s3:::{{bucketName}}/"]
-                                       }
-                                   ]
-                               }
-                               """;
+                              {
+                                  "Version": "2012-10-17",
+                                  "Statement": [
+                                      {
+                                          "Effect": "Allow",
+                                          "Principal": "*",
+                                          "Action": ["s3:GetObject"],
+                                          "Resource": ["arn:aws:s3:::{{bucketName}}/*"]
+                                      }
+                                  ]
+                              }
+                              """;
             var putBucketPolicyRequest = new PutBucketPolicyRequest
             {
                 BucketName = bucketName,

@@ -22,6 +22,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileService.Infrastructure.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileService.Contracts", "FileService.Contracts\FileService.Contracts.csproj", "{82B94EB2-4902-4896-B116-FA52E9C7EC92}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A906CCE8-6C54-44D2-BF52-D0DE6584B525}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileService.IntegrationTests", "tests\FileService.IntegrationTests\FileService.IntegrationTests.csproj", "{3D65371A-87E2-4EC2-A47A-EB488A42DCE9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,11 +56,18 @@ Global
 		{82B94EB2-4902-4896-B116-FA52E9C7EC92}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82B94EB2-4902-4896-B116-FA52E9C7EC92}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82B94EB2-4902-4896-B116-FA52E9C7EC92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D65371A-87E2-4EC2-A47A-EB488A42DCE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D65371A-87E2-4EC2-A47A-EB488A42DCE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D65371A-87E2-4EC2-A47A-EB488A42DCE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D65371A-87E2-4EC2-A47A-EB488A42DCE9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D50FA303-EDCD-4712-ACCE-81E0D82A5824}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3D65371A-87E2-4EC2-A47A-EB488A42DCE9} = {A906CCE8-6C54-44D2-BF52-D0DE6584B525}
 	EndGlobalSection
 EndGlobal
