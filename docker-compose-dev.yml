@@ -14,15 +14,15 @@ services:
     restart: always
   seq:
     container_name: seq
-    image: datalust/seq:latest    
+    image: datalust/seq:latest
     ports:
       - "5342:5341" # HTTP API and UI
-      - "8081:80"   # Optional: if you want to expose Seq on port 80 directly
+      - "8081:80" # Optional: if you want to expose Seq on port 80 directly
     environment:
-      ACCEPT_EULA: 'Y' # Required to accept the Seq End User License Agreement
-      SEQ_FIRSTRUN_NOAUTHENTICATION: 'true'
+      ACCEPT_EULA: "Y" # Required to accept the Seq End User License Agreement
+      SEQ_FIRSTRUN_NOAUTHENTICATION: "true"
     restart: always
-  postgres:  
+  postgres:
     container_name: postgres-education-service
     image: postgres
     restart: always
@@ -37,3 +37,14 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+  minio-dev:
+    container_name: minio-dev
+    image: minio/minio:latest
+    ports:
+      - "9000:9000"
+      - "9003:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    command: server --console-address ":9001" /data
+    restart: always
