@@ -1,4 +1,5 @@
-﻿namespace Shared.SharedKernel
+﻿using System.Text.Json.Serialization;  
+namespace Shared.SharedKernel
 {
     public record Envelope
     {
@@ -7,6 +8,7 @@
         public bool IsError => Error != null;
         public DateTime TimeGenerated { get; }
 
+        [JsonConstructor]
         private Envelope(object? result, Error? error)
         {
             Result = result;
@@ -28,6 +30,7 @@
         public bool IsError => Error != null;
         public DateTime TimeGenerated { get; }
 
+        [JsonConstructor]
         private Envelope(T? result, Error? error)
         {
             Result = result;

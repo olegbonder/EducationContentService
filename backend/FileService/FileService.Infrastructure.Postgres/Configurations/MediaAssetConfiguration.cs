@@ -25,6 +25,7 @@ public class MediaAssetConfiguration : IEntityTypeConfiguration<MediaAsset>
             {
                 fb.Property(f => f.Name).HasColumnName("name").IsRequired();
                 fb.Property(f => f.Extension).HasColumnName("extension").IsRequired();
+                fb.Property(f => f.Value).HasColumnName("value").IsRequired();
             });
 
             mb.Property(md => md.Size).HasColumnName("size").IsRequired();
