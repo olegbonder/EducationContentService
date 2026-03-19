@@ -58,7 +58,7 @@ namespace FileService.Domain.Assets
 
         public Result MarkUploaded()
         {
-            if (Status == MediaStatus.UPLOADING)
+            if (Status == MediaStatus.UPLOADED)
                 return Result.Success();
 
             Status = MediaStatus.UPLOADED;

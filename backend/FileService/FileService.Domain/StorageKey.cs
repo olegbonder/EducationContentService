@@ -1,4 +1,5 @@
-﻿using CSharpFunctionalExtensions;
+﻿using System.Text.Json.Serialization;
+using CSharpFunctionalExtensions;
 using Shared.SharedKernel;
 
 namespace FileService.Domain;
@@ -11,6 +12,7 @@ public sealed record StorageKey
     public string Value { get; }
     public string FullPath { get; }
 
+    [JsonConstructor]
     private StorageKey(string location, string key, string prefix)
     {
         Location = location;
