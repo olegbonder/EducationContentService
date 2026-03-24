@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Core" />
+    <PackageReference Include="FileService.Contracts" />
     <PackageReference Include="Framework" />
   </ItemGroup>
 

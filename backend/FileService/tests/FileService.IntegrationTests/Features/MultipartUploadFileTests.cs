@@ -1,7 +1,6 @@
 ﻿using System.Net.Http.Json;
 using FileService.Contracts;
 using FileService.Core.Features;
-using FileService.Core.HttpCommunication;
 using FileService.Infrastructure.Postgres;
 using FileService.IntegrationTests.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +10,7 @@ using FileService.Domain;
 using Shared.SharedKernel;
 using CSharpFunctionalExtensions;
 using Amazon.S3;
+using FileService.Contracts.Dtos;
 
 namespace FileService.IntegrationTests.Features;
 

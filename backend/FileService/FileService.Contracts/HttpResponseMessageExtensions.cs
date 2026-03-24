@@ -1,9 +1,8 @@
 ﻿using System.Net.Http.Json;
 using CSharpFunctionalExtensions;
-using FileService.Core.Features;
 using Shared.SharedKernel;
 
-namespace FileService.Core.HttpCommunication;
+namespace FileService.Contracts;
 
 public static class HttpResponseMessageExtensions
 {

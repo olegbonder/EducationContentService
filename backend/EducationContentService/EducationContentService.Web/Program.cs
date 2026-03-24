@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using EducationContentService.Core.Features.Lessons;
 using EducationContentService.Infrastructure.Postgres;
 using EducationContentService.Web.Configuration;
 using Serilog;
@@ -47,3 +46,6 @@ finally
 {
     Log.CloseAndFlush();
 }
+
+public partial class Program 
+{}

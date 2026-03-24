@@ -1,10 +1,10 @@
 ﻿using EducationContentService.Domain.ValueObjects;
 
-namespace EducationContentService.Domain.Lesson
+namespace EducationContentService.Domain.Lessons
 {
     public sealed class Lesson
     {
-        public Lesson(Guid? id, Title title, Description description)
+        public Lesson(Guid? id, Title title, Description description, Guid videoId)
         {
             Id = id ?? Guid.NewGuid();
             Title = title;
@@ -13,6 +13,7 @@ namespace EducationContentService.Domain.Lesson
             UpdatedAt = DateTime.UtcNow;
             IsDeleted = false;
             DeleteAt = null;
+            VideoId = videoId;
         }
 
         // EF Core
@@ -25,6 +26,8 @@ namespace EducationContentService.Domain.Lesson
         public Title Title { get; private set; } = null!;
 
         public Description Description { get; private set; } = null!;
+        
+        public Guid VideoId { get; private set; }
 
         public DateTime CreatedAt { get; private set; }
 

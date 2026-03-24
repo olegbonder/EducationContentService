@@ -228,6 +228,7 @@ csharp_style_prefer_readonly_struct_member = true:suggestion
 csharp_style_prefer_readonly_struct = true:suggestion
 csharp_prefer_static_anonymous_function = true:suggestion
 dotnet_diagnostic.ASP0020.severity = none
+dotnet_diagnostic.CA2007.severity = none
 
 # Xml build files
 [*.builds]
@@ -293,6 +294,7 @@ dotnet_diagnostic.SA1623.severity = none
 dotnet_diagnostic.SA1118.severity = none
 dotnet_diagnostic.eSA1128.severity = none
 dotnet_diagnostic.SA1401.severity = none
+dotnet_diagnostic.CA2234.severity = none
 
 # Отключаем или меняем уровень серьезности предупреждения SA1310, чтобы не конфликтовало с новыми правилами.
 dotnet_diagnostic.SA1310.severity = none

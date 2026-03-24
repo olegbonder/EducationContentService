@@ -2,6 +2,8 @@
 using CSharpFunctionalExtensions;
 using EducationContentService.Contracts;
 using EducationContentService.Core.Database;
+using FileService.Contracts;
+using FileService.Contracts.Dtos;
 using FluentValidation;
 using Framework;
 using Framework.Endpoints;
@@ -14,7 +16,7 @@ using Shared.SharedKernel;
 
 namespace EducationContentService.Core.Features.Lessons
 {
-    public sealed class GetLessonRequestValidator : AbstractValidator<GetLessonRequest>
+    public sealed class GetLessonRequestValidator : AbstractValidator<GetLessonsRequest>
     {
         public GetLessonRequestValidator()
         {
@@ -37,7 +39,7 @@ namespace EducationContentService.Core.Features.Lessons
         {
             routeBuilder.MapGet("/lessons", 
                 async Task<EndpointResult<PaginationLessonResponse>>(
-                [AsParameters] GetLessonRequest request,
+                [AsParameters] GetLessonsRequest request,
                 [FromServices] GetHanlder handler, 
                 CancellationToken cancellationToken) =>
                     await handler.Handle(request, cancellationToken)
@@ -48,18 +50,21 @@ namespace EducationContentService.Core.Features.Lessons
     public sealed class GetHanlder
     {
         private readonly IEducationReadDbContext _readDbContext;
-        private readonly IValidator<GetLessonRequest> _validator;
+        private readonly IFileCommunicationService _fileCommunicationService;
+        private readonly IValidator<GetLessonsRequest> _validator;
 
         public GetHanlder(
             IEducationReadDbContext readDbContext,
-            IValidator<GetLessonRequest> validator)
+            IFileCommunicationService fileCommunicationService,
+            IValidator<GetLessonsRequest> validator)
         {
             _readDbContext = readDbContext;
+            _fileCommunicationService = fileCommunicationService;
             _validator = validator;
         }
 
         public async Task<Result<PaginationLessonResponse, Error>> Handle(
-            GetLessonRequest request, 
+            GetLessonsRequest request, 
             CancellationToken cancellationToken)
         {
             var validationResult = await _validator.ValidateAsync(request, cancellationToken);
@@ -90,7 +95,11 @@ namespace EducationContentService.Core.Features.Lessons
                 Title = l.Title.Value,
                 Description = l.Description.Value,
                 CreatedAt = l.CreatedAt,
-                UpdatedAt = l.UpdatedAt
+                UpdatedAt = l.UpdatedAt,
+                Video = new MediaDto
+                {
+                    Id = l.VideoId
+                }
             })
                 .Skip((request.Page - 1) * request.PageSize)
                 .Take(request.PageSize)
@@ -99,6 +108,30 @@ namespace EducationContentService.Core.Features.Lessons
 
             int totalPages = (int)Math.Ceiling(lessonsCount/ (double)request.PageSize);
 
+            var mediaAssetIds = lessons
+                .Where(l => l.Video != null)
+                .Select(l => l.Video!.Id)
+                .ToList();
+            var mediaAssets = await _fileCommunicationService
+                .GetMediaAssets(new GetMediaAssetsRequest(mediaAssetIds), cancellationToken);
+            if (mediaAssets.IsFailure)
+                return mediaAssets.Error;
+
+            var mediaAssetsDict = mediaAssets.Value.Items
+                .ToDictionary(x => x.Id, x => x);
+
+            foreach (var lessonDto in lessons)
+            {
+                if (lessonDto.Video != null && mediaAssetsDict.TryGetValue(lessonDto.Video.Id, out GetMediaAssetsDto? mediaAsset))
+                {
+                    lessonDto.Video = new MediaDto
+                    {
+                        Id = mediaAsset.Id,
+                        Status = mediaAsset.Status,
+                        Url = mediaAsset.Url,
+                    };
+                }
+            }
             return new PaginationLessonResponse(lessons, lessonsCount, request.Page, request.PageSize, totalPages);
         }
     }

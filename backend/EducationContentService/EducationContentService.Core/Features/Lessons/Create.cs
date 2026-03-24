@@ -1,7 +1,7 @@
 ﻿using Core.Validation;
 using CSharpFunctionalExtensions;
 using EducationContentService.Contracts;
-using EducationContentService.Domain.Lesson;
+using EducationContentService.Domain.Lessons;
 using EducationContentService.Domain.ValueObjects;
 using FluentValidation;
 using Framework;
@@ -68,7 +68,7 @@ namespace EducationContentService.Core.Features.Lessons
 
             var description = Description.Create(request.Description).Value;
 
-            var lesson = new Lesson(Guid.NewGuid(), title, description);
+            var lesson = new Lesson(Guid.NewGuid(), title, description, request.VideoId);
 
             var result = await _lessonsRepository.AddAsync(lesson, cancellationToken);
             if (result.IsFailure)

@@ -1,4 +1,5 @@
 ﻿using EducationContentService.Core.Features.Lessons;
+using FileService.Contracts.HttpCommunication;
 using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +17,8 @@ namespace EducationContentService.Core
 
             services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
 
+            services.AddFileServiceHttpCommunication(configuration);
+            
             return services;
         }
     }

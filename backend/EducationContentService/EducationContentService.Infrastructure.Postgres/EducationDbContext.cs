@@ -1,5 +1,5 @@
 ﻿using EducationContentService.Core.Database;
-using EducationContentService.Domain.Lesson;
+using EducationContentService.Domain.Lessons;
 using Microsoft.EntityFrameworkCore;
 
 namespace EducationContentService.Infrastructure.Postgres

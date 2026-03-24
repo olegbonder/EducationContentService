@@ -1,7 +1,7 @@
-﻿namespace FileService.Contracts
+﻿namespace FileService.Contracts.Dtos
 {
     public record GetMediaAssetsDto(
-        Guid id, 
+        Guid Id, 
         string Status, 
         string AssetType,
         string? Url);

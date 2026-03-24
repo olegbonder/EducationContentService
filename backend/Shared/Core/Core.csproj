@@ -11,7 +11,7 @@
 
   <PropertyGroup>
     <PackageId>Core</PackageId>
-    <Version>0.0.1</Version>
+    <Version>0.0.2</Version>
     <Authors>Manuilov Oleg</Authors>
     <PackageDescription>Application Project</PackageDescription>
     <RepositoryUrl>https://github.com/olegbonder/EducationContentService</RepositoryUrl>

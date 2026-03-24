@@ -1,5 +1,4 @@
-﻿using EducationContentService.Domain.Lesson;
-using EducationContentService.Domain.ValueObjects;
+﻿using EducationContentService.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -7,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EducationContentService.Domain.Lessons;
 
 namespace EducationContentService.Infrastructure.Postgres.Configurations
 {

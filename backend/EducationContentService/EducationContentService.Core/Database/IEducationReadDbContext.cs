@@ -1,4 +1,4 @@
-﻿using EducationContentService.Domain.Lesson;
+﻿using EducationContentService.Domain.Lessons;
 
 namespace EducationContentService.Core.Database
 {
