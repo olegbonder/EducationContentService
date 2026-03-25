@@ -1,4 +1,5 @@
-﻿using Shared.SharedKernel;
+﻿using CSharpFunctionalExtensions;
+using Shared.SharedKernel;
 
 namespace EducationContentService.Domain.Shared;
 
@@ -12,4 +13,8 @@ public static class EducationErrors
     
     public static Error OperationCancelled() => 
         Error.Failure("education.operation.cancelled", "Операция была отменена");
+
+    public static Result<Guid, Error> VideoAssetNotFound(Guid videoId) =>
+        Error.NotFound(
+            new ErrorMessage("video_asset.not.found",$"Video asset not found {videoId}", null));
 }

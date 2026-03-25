@@ -27,7 +27,9 @@ namespace EducationContentService.Domain.Lessons
 
         public Description Description { get; private set; } = null!;
         
-        public Guid VideoId { get; private set; }
+        public Guid? VideoId { get; private set; }
+        
+        public Guid? PreviewId { get; private set; }
 
         public DateTime CreatedAt { get; private set; }
 
@@ -47,6 +49,18 @@ namespace EducationContentService.Domain.Lessons
         {
             Title = title; 
             Description = description;
+            UpdatedAt = DateTime.UtcNow;
+        }
+
+        public void UpdateVideoId(Guid? videoId)
+        {
+            VideoId = videoId;
+            UpdatedAt = DateTime.UtcNow;
+        }
+        
+        public void UpdatePreviewId(Guid? previewId)
+        {
+            PreviewId = previewId;
             UpdatedAt = DateTime.UtcNow;
         }
     }

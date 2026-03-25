@@ -1,11 +1,6 @@
 ﻿using EducationContentService.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using EducationContentService.Domain.Lessons;
 
 namespace EducationContentService.Infrastructure.Postgres.Configurations
@@ -58,6 +53,14 @@ namespace EducationContentService.Infrastructure.Postgres.Configurations
                 .HasDefaultValueSql("timezone('utc', now())")
                 .HasColumnName("updated_at");            
 
+            builder.Property(l => l.VideoId)
+                .IsRequired(false)
+                .HasColumnName("video_id");
+            
+            builder.Property(l => l.PreviewId)
+                .IsRequired(false)
+                .HasColumnName("preview_id");
+            
             builder.HasQueryFilter(l => !l.IsDeleted);
         }
     }

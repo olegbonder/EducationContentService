@@ -96,10 +96,10 @@ namespace EducationContentService.Core.Features.Lessons
                 Description = l.Description.Value,
                 CreatedAt = l.CreatedAt,
                 UpdatedAt = l.UpdatedAt,
-                Video = new MediaDto
+                Video = l.VideoId.HasValue ? new MediaDto
                 {
-                    Id = l.VideoId
-                }
+                    Id = l.VideoId.Value
+                } : null
             })
                 .Skip((request.Page - 1) * request.PageSize)
                 .Take(request.PageSize)

@@ -7,7 +7,9 @@ namespace EducationContentService.IntegrationTests.Mocks;
 
 public class FileServiceCommunicationMock : IFileCommunicationService
 {
-    public Task<Result<GetMediaAssetsResponse, Error>> GetMediaAssets(GetMediaAssetsRequest request, CancellationToken cancellationToken = new CancellationToken())
+    public Task<Result<GetMediaAssetsResponse, Error>> GetMediaAssets(
+        GetMediaAssetsRequest request, 
+        CancellationToken cancellationToken)
     {
         var result = new GetMediaAssetsResponse([
             new GetMediaAssetsDto(Guid.NewGuid(), "ready", "video", "url"),
@@ -16,5 +18,14 @@ public class FileServiceCommunicationMock : IFileCommunicationService
         ]);
         
         return Task.FromResult(Result.Success<GetMediaAssetsResponse, Error>(result));
+    }
+
+    public Task<Result<CheckMediaAssetExistsResponse, Error>> CheckMediaAssetExists(
+        Guid mediaAssetId,
+        CancellationToken cancellationToken)
+    {
+        var result = new CheckMediaAssetExistsResponse(true);
+        
+        return Task.FromResult(Result.Success<CheckMediaAssetExistsResponse, Error>(result));
     }
 }
