@@ -13,8 +13,8 @@ public class VideoAsset: MediaAsset
         Guid id,
         MediaData data,
         MediaStatus status,
-        StorageKey key)
-        : base(id, data, status, AssetType.VIDEO, key)
+        StorageKey rawKey)
+        : base(id, data, status, AssetType.VIDEO, rawKey)
     {
     }
 
@@ -53,7 +53,7 @@ public class VideoAsset: MediaAsset
             return validationResult.Error;
         }
 
-        var keyResult = StorageKey.Create(LOCATION, null, id.ToString());
+        var keyResult = StorageKey.Create(LOCATION, RAW_PREFIX, id.ToString());
         if (keyResult.IsFailure)
         {
             return keyResult.Error;
@@ -64,4 +64,6 @@ public class VideoAsset: MediaAsset
             MediaStatus.UPLOADING,
             keyResult.Value);
     }
+
+    public override bool RequiredProcessing() => true;
 }

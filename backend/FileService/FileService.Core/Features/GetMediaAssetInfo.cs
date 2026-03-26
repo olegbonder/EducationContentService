@@ -50,7 +50,7 @@ namespace FileService.Core.Features
 
             if (mediaAsset.Status == MediaStatus.READY)
             {
-                var urlsResult = await _s3Provider.GenerateDownloadUrlAsync(mediaAsset.Key);
+                var urlsResult = await _s3Provider.GenerateDownloadUrlAsync(mediaAsset.UploadKey);
                 if (urlsResult.IsFailure)
                     return urlsResult.Error;
 

@@ -14,7 +14,7 @@ public class PreviewAsset: MediaAsset
         MediaData data,
         MediaStatus status,
         StorageKey key)
-        : base(id, data, status, AssetType.PREVIEW, key)
+        : base(id, data, status, AssetType.PREVIEW, key, true)
     {
     }
 

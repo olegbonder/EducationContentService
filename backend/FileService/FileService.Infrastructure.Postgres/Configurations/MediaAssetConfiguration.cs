@@ -1,7 +1,9 @@
-﻿using FileService.Domain;
+﻿using System.Text.Json;
+using FileService.Domain;
 using FileService.Domain.Assets;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace FileService.Infrastructure.Postgres.Configurations;
 
@@ -45,15 +47,19 @@ public class MediaAssetConfiguration : IEntityTypeConfiguration<MediaAsset>
 
         builder.Property(m => m.CreatedAt).HasColumnName("created_at").IsRequired();
         builder.Property(m => m.UpdatedAt).HasColumnName("updated_at");
-        builder.OwnsOne(m => m.Key, rkb =>
-        {
-            rkb.ToJson("raw_key");
-            rkb.Property(r => r.Location).HasColumnName("location").IsRequired();
-            rkb.Property(r => r.Key).HasColumnName("key").IsRequired();
-            rkb.Property(r => r.Prefix).HasColumnName("prefix");
-            rkb.Property(r => r.Value).HasColumnName("value").IsRequired();
-            rkb.Property(r => r.FullPath).HasColumnName("full_path").IsRequired();
-        });
+
+        builder.Property(m => m.Key)
+            .HasConversion(
+                v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
+                v => JsonSerializer.Deserialize<StorageKey>(v, (JsonSerializerOptions?)null)!)
+            .HasColumnName("key")
+            .HasColumnType("jsonb");
+        builder.Property(m => m.RawKey)
+            .HasConversion(
+                v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
+                v => JsonSerializer.Deserialize<StorageKey>(v, (JsonSerializerOptions?)null)!)
+            .HasColumnName("raw_key")
+            .HasColumnType("jsonb");
 
         builder.Property(m => m.AssetType)
             .HasColumnName("asset_type")

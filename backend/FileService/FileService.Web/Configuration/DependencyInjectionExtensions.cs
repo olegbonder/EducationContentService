@@ -7,7 +7,7 @@ using Framework.Swagger;
 
 namespace FileService.Web.Configuration
 {
-    public static class DependencyInjectionExtensions
+    internal static class DependencyInjectionExtensions
     {
         public static IServiceCollection AddConfiguration(this IServiceCollection services, IConfiguration configuration)
         {

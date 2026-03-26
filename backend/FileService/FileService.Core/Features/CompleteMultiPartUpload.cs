@@ -52,7 +52,7 @@ namespace FileService.Core.Features
                 return GeneralErrors.Failure("Количество etags не соответствует количеству чанков");
 
             var completeResult = await _s3Provider.CompleteMultiPartUploadAsync(
-                mediaAsset.Key,
+                mediaAsset.UploadKey,
                 request.UploadId,
                 request.PartETags,
                 cancellationToken
