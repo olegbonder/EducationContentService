@@ -27,12 +27,12 @@ namespace FileService.Core.Features
 
     public sealed class CompleteMultiPartUploadHandler
     {
-        private readonly IMediaAssetRepository _mediaAssetRepository;
+        private readonly IVideoAssetRepository _mediaAssetRepository;
         private readonly ILogger<StartMultiPartUploadHandler> _logger;
         private readonly IS3Provider _s3Provider;
 
         public CompleteMultiPartUploadHandler(
-            IMediaAssetRepository mediaAssetRepository,
+            IVideoAssetRepository mediaAssetRepository,
             ILogger<StartMultiPartUploadHandler> logger,
             IS3Provider s3Provider)
         {

@@ -23,7 +23,16 @@ public class VideoAsset: MediaAsset
     public const string RAW_PREFIX = "raw";
     private const string ALLOWED_CONTENT_TYPE = "video";
 
+    private const string HLS_PREFIX = "hls";
+
+    public const string MASTER_PLAYLIST_NAME = "master.m3u8";
+    public const string STREAM_PLAYLIST_PATTERN = "%v_stream.m3u8";
+    public const string SEGMENT_FILE_PATTERN = "%v_%06d.ts";
+
+
     private static readonly string[] AllowedExtensions = ["mp4", "mkv", "avi", "mov"];
+
+    public VideoMetaData? MetaData { get; private set; }
 
     public static UnitResult<Error> Validate(MediaData mediaData)
     {
@@ -65,5 +74,64 @@ public class VideoAsset: MediaAsset
             keyResult.Value);
     }
 
+    public Result<StorageKey, Error> GetHlsRootKey()
+    {
+        return StorageKey.Create(LOCATION, HLS_PREFIX, Id.ToString());
+    }
+
+    public Result<StorageKey, Error> GetHlsMasterPlaylistKey()    
+    {
+        var hlsRootKey = GetHlsRootKey();
+        if (hlsRootKey.IsFailure)
+            return hlsRootKey.Error;
+            
+
+        return hlsRootKey.Value.AppendKey(MASTER_PLAYLIST_NAME);
+    }
+
+    public void SetMetaData(VideoMetaData metaData)
+    {
+        MetaData = metaData;
+    }
+
     public override bool RequiredProcessing() => true;
+
+    public UnitResult<Error> StartProcessing()
+    {
+        if (Status != MediaStatus.UPLOADED)
+            return Error.Validation("asset.invalid.status.transition", "Can only start processing from UPLOADING status");
+
+        if (!RequiredProcessing())
+            return Error.Validation("asset.processing.not.required", "This asset does not require processing");
+
+        Status = MediaStatus.PROCESSING;
+        UpdatedAt = DateTime.UtcNow;
+
+        return UnitResult.Success<Error>();
+    }
+
+    public UnitResult<Error> SetHlsMasterPlaylistKey(StorageKey value)
+    {
+        if (Status != MediaStatus.PROCESSING)
+            return Error.Validation("video.invalid.status", "Can only set hls master playlist key from PROCESSING status");
+
+        if (Key is not null)
+            return Error.Validation("video.hls.key.exists", "HLS master playlist key already exists");
+
+        Key = value;
+        UpdatedAt = DateTime.UtcNow;
+
+        return UnitResult.Success<Error>();
+    }
+
+        public UnitResult<Error> CompleteProcessing()
+        {
+            if (Status != MediaStatus.PROCESSING)
+                return Error.Validation("video.invalid.status", "Can only complete processing from PROCESSING status");
+
+            Status = MediaStatus.READY;
+            UpdatedAt = DateTime.UtcNow;
+
+            return UnitResult.Success<Error>();
+        }
 }

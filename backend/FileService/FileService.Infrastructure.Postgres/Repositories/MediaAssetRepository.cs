@@ -55,6 +55,14 @@ public class MediaAssetRepository : IMediaAssetRepository
 
     public async Task<Result<MediaAsset, Error>> GetById(Guid mediaAssetId, CancellationToken cancellationToken) =>
         await GetBy(m => m.Id == mediaAssetId, cancellationToken);
-    public async Task<int> SaveAsync(CancellationToken cancellationToken) => 
-        await _context.SaveChangesAsync(cancellationToken);
+        
+    public async Task<Result<VideoAsset, Error>> GetVideoBy(Expression<Func<VideoAsset, bool>> predicate, CancellationToken cancellationToken)
+    {
+        var videoAsset = await _context.MediaAssets
+            .OfType<VideoAsset>().FirstOrDefaultAsync(predicate, cancellationToken);
+        if (videoAsset == null)
+            return GeneralErrors.NotFound(null, "video_asset");
+
+        return videoAsset;
+    }
 }

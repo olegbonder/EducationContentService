@@ -11,7 +11,7 @@ public interface IMediaAssetRepository
 
     Task<Result<MediaAsset, Error>> GetBy(Expression<Func<MediaAsset, bool>> predicate, CancellationToken cancellationToken);
 
-    Task<Result<MediaAsset, Error>> GetById(Guid mediaAssetId, CancellationToken cancellationToken);
+    Task<Result<VideoAsset, Error>> GetVideoBy(Expression<Func<VideoAsset, bool>> predicate, CancellationToken cancellationToken);
 
-    Task<int> SaveAsync(CancellationToken cancellationToken);
+    Task<Result<MediaAsset, Error>> GetById(Guid mediaAssetId, CancellationToken cancellationToken);
 }

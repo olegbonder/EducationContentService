@@ -1,5 +1,4 @@
 ﻿using CSharpFunctionalExtensions;
-using FileService.Contracts;
 using FileService.Contracts.Dtos;
 using FileService.Core.Models;
 using FileService.Domain;
@@ -20,7 +19,7 @@ public interface IS3Provider
         int totalChunks,
         CancellationToken cancellationToken);
 
-    Task<Result<string, Error>> GenerateDownloadUrlAsync(StorageKey storageKey);
+    Task<Result<string, Error>> GenerateDownloadUrlAsync(StorageKey storageKey, bool useExternalEndpoint = false);
 
     Task<Result<IReadOnlyList<MediaUrl>, Error>> GenerateDownloadUrlsAsync(IEnumerable<StorageKey> storageKeys); 
 
@@ -30,4 +29,12 @@ public interface IS3Provider
         string uploadId,
         IReadOnlyList<PartEtagDto> partETags,
         CancellationToken cancellationToken);
+
+    Task<UnitResult<Error>> UploadFileAsync(
+        StorageKey storageKey,
+        FileStream fileStream,
+        string contentType,
+        CancellationToken cancellationToken);
+
+    Task<UnitResult<Error>> DeleteFileAsync(StorageKey storageKey, CancellationToken cancellationToken);
 }

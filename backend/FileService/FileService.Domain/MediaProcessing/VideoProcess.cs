@@ -192,7 +192,7 @@ namespace FileService.Domain.MediaProcessing
             ProgressPercentage = totalProgress;
         }
 
-        private UnitResult<Error> Complete()
+        public UnitResult<Error> Complete()
         {
             if (Status != ProcessingStatus.IN_PROGRESS)
                 return Error.Failure("processing.invalid.status", $"Can only complete from IN_PROGRESS status, current status: {Status}");

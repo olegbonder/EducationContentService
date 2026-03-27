@@ -28,13 +28,13 @@ public sealed class StartMultiPartUpload : IEndpoint
 
 public sealed class StartMultiPartUploadHandler
 {
-    private readonly IMediaAssetRepository _mediaAssetRepository;
+    private readonly IVideoAssetRepository _mediaAssetRepository;
     private readonly ILogger<StartMultiPartUploadHandler> _logger;
     private readonly IS3Provider _s3Provider;
     private readonly IChunkSizeCalculator _chunkSizeCalculator;
 
     public StartMultiPartUploadHandler(
-        IMediaAssetRepository mediaAssetRepository,
+        IVideoAssetRepository mediaAssetRepository,
         ILogger<StartMultiPartUploadHandler> logger,
         IS3Provider s3Provider,
         IChunkSizeCalculator chunkSizeCalculator)

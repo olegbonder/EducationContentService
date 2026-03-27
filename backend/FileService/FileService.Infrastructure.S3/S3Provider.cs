@@ -97,7 +97,7 @@ public class S3Provider: IS3Provider
         }
     }
 
-    public async Task<Result<string, Error>> GenerateDownloadUrlAsync(StorageKey storageKey)
+    public async Task<Result<string, Error>> GenerateDownloadUrlAsync(StorageKey storageKey, bool useExternalEndpoint = false)
     {
         try
         {
@@ -201,5 +201,54 @@ public class S3Provider: IS3Provider
         {
             return S3ErrorMapper.ToError(ex);
         }
-    }    
+    }
+
+    public async Task<UnitResult<Error>> UploadFileAsync(
+        StorageKey storageKey,
+        FileStream fileStream,
+        string contentType,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var request = new PutObjectRequest
+            {
+                BucketName = storageKey.Location,
+                Key = storageKey.Value,
+                InputStream = fileStream,
+                ContentType = contentType ?? "application/octet-stream"
+            };
+            await _s3Client.PutObjectAsync(request, cancellationToken);
+
+            return UnitResult.Success<Error>();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error uploading file to {storageKey}", storageKey);
+            return S3ErrorMapper.ToError(ex);
+        }
+    }
+
+    public async Task<UnitResult<Error>> DeleteFileAsync(
+        StorageKey storageKey,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var request = new DeleteObjectRequest
+            {
+                BucketName = storageKey.Location,
+                Key = storageKey.Value
+            };
+
+            await _s3Client.DeleteObjectAsync(request, cancellationToken);
+
+            return UnitResult.Success<Error>();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error deleting file from {storageKey}", storageKey);
+            return S3ErrorMapper.ToError(ex);
+        }
+    }
 }
