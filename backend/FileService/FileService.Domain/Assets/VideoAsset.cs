@@ -124,14 +124,14 @@ public class VideoAsset: MediaAsset
         return UnitResult.Success<Error>();
     }
 
-        public UnitResult<Error> CompleteProcessing()
-        {
-            if (Status != MediaStatus.PROCESSING)
-                return Error.Validation("video.invalid.status", "Can only complete processing from PROCESSING status");
+    public UnitResult<Error> CompleteProcessing()
+    {
+        if (Status != MediaStatus.PROCESSING)
+            return Error.Validation("video.invalid.status", "Can only complete processing from PROCESSING status");
 
-            Status = MediaStatus.READY;
-            UpdatedAt = DateTime.UtcNow;
+        Status = MediaStatus.READY;
+        UpdatedAt = DateTime.UtcNow;
 
-            return UnitResult.Success<Error>();
-        }
+        return UnitResult.Success<Error>();
+    }
 }

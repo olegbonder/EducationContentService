@@ -27,23 +27,27 @@ namespace FileService.Core.Features
 
     public sealed class CompleteMultiPartUploadHandler
     {
-        private readonly IVideoAssetRepository _mediaAssetRepository;
+        private readonly IMediaAssetRepository _mediaAssetRepository;
         private readonly ILogger<StartMultiPartUploadHandler> _logger;
         private readonly IS3Provider _s3Provider;
+        private readonly ITransactionManager _transactionManager;
 
         public CompleteMultiPartUploadHandler(
-            IVideoAssetRepository mediaAssetRepository,
+            IMediaAssetRepository mediaAssetRepository,
             ILogger<StartMultiPartUploadHandler> logger,
-            IS3Provider s3Provider)
+            IS3Provider s3Provider,
+            ITransactionManager transactionManager)
         {
             _mediaAssetRepository = mediaAssetRepository;
             _logger = logger;
             _s3Provider = s3Provider;
+            _transactionManager = transactionManager;
         }
 
         public async Task<UnitResult<Error>> Handle(CompleteMultiPartUploadRequest request, CancellationToken cancellationToken)
         {
-            (_, bool isFailure, MediaAsset? mediaAsset, Error? error) = await _mediaAssetRepository.GetBy(m => m.Id == request.MediaAssetId, cancellationToken);
+            (_, bool isFailure, MediaAsset? mediaAsset, Error? error) = await _mediaAssetRepository
+                .GetBy(m => m.Id == request.MediaAssetId, cancellationToken);
             if (isFailure)
                 return error;
 
@@ -61,7 +65,7 @@ namespace FileService.Core.Features
                 return completeResult.Error;
 
             mediaAsset.MarkUploaded();
-            await _mediaAssetRepository.SaveAsync(cancellationToken);
+            await _transactionManager.SaveChangesAsync(cancellationToken);
 
             _logger.LogInformation("File uploading sucessfully. MediaAssetId: {MediaAssetId}", mediaAsset.Id);
 

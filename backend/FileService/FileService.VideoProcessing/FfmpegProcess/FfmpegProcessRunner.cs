@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using CSharpFunctionalExtensions;
+﻿using CSharpFunctionalExtensions;
 using FileService.Domain;
 using FileService.Domain.Assets;
 using FileService.VideoProcessing.ProcessRunner;

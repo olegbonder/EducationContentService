@@ -10,6 +10,9 @@ namespace FileService.VideoProcessing.ProcessRunner
             => WhitespaceRegex().Replace(input.Trim(), " ");
 
         [GeneratedRegex(@"\s+", RegexOptions.Compiled)]
-        private static partial Regex WhitespaceRegex();
+        private static Regex WhitespaceRegex()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
