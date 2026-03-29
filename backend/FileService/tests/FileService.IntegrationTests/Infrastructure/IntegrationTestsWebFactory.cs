@@ -4,6 +4,7 @@ using FileService.Core;
 using FileService.Core.FilesStorage;
 using FileService.Infrastructure.Postgres;
 using FileService.Infrastructure.S3;
+using FileService.IntegrationTests.Mocks;
 using FileService.VideoProcessing.FfmpegProcess;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -85,9 +86,9 @@ public class IntegrationTestsWebFactory : WebApplicationFactory<Program>, IAsync
 
             services.RemoveAll<S3BucketInitializationService>();
 
-            //services.RemoveAll<IFfmpegProcessRunner>();
+            services.RemoveAll<IFfmpegProcessRunner>();
             
-            //services.AddSingleton<IFfmpegProcessRunner, FfmpegProcessRunner>();
+            services.AddSingleton<IFfmpegProcessRunner, FakeHlsGenerator>();
         });
     }
 
