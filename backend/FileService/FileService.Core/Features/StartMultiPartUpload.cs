@@ -32,17 +32,20 @@ public sealed class StartMultiPartUploadHandler
     private readonly ILogger<StartMultiPartUploadHandler> _logger;
     private readonly IS3Provider _s3Provider;
     private readonly IChunkSizeCalculator _chunkSizeCalculator;
+    private readonly ITransactionManager _transactionManager;
 
     public StartMultiPartUploadHandler(
         IMediaAssetRepository mediaAssetRepository,
         ILogger<StartMultiPartUploadHandler> logger,
         IS3Provider s3Provider,
-        IChunkSizeCalculator chunkSizeCalculator)
+        IChunkSizeCalculator chunkSizeCalculator,
+        ITransactionManager transactionManager)
     {
         _mediaAssetRepository = mediaAssetRepository;
         _logger = logger;
         _s3Provider = s3Provider;
         _chunkSizeCalculator = chunkSizeCalculator;
+        _transactionManager = transactionManager;
     }
 
     public async Task<Result<StartMultiPartUploadResponse, Error>> Handle(StartMultiPartUploadRequest request, CancellationToken cancellationToken)
@@ -71,7 +74,11 @@ public sealed class StartMultiPartUploadHandler
         if (mediaAssetResult.IsFailure)
             return mediaAssetResult.Error;
 
-        await _mediaAssetRepository.Add(mediaAssetResult.Value, cancellationToken);
+        _mediaAssetRepository.Add(mediaAssetResult.Value);
+
+        var saveResult = await _transactionManager.SaveChangesAsync(cancellationToken);
+        if (saveResult.IsFailure)
+            return saveResult.Error;        
 
         var mediaAsset = mediaAssetResult.Value;
         var startUploadResult = await _s3Provider.StartMultiPartUploadAsync(mediaAsset.UploadKey, mediaAsset.MediaData, cancellationToken);
@@ -79,7 +86,7 @@ public sealed class StartMultiPartUploadHandler
             return startUploadResult.Error;
 
         var chunksUploadUrlsResult = await _s3Provider.GenerateAllChunksUploadUrlsAsync(
-            mediaAsset.Key, 
+            mediaAsset.UploadKey, 
             startUploadResult.Value, 
             chunkCalculationResult.Value.TotalChunks, 
             cancellationToken);

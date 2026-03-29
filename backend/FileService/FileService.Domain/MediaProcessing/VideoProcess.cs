@@ -9,9 +9,9 @@ namespace FileService.Domain.MediaProcessing
         {
             { StepType.INITIALIZATE, 0 },
             { StepType.EXTRACT_METADATA, 10 },
-            { StepType.GENERATE_HLS, 60 },
+            { StepType.GENERATE_HLS, 70 },
             { StepType.UPLOAD_HLS, 15 },
-            { StepType.GENERATE_PREVIEW, 10 },
+            //{ StepType.GENERATE_PREVIEW, 10 },
             { StepType.CLEANUP, 5 }
         };
         
@@ -20,6 +20,8 @@ namespace FileService.Domain.MediaProcessing
         public Guid Id { get; private set; }
 
         public Guid VideoAssetId { get; private set; }
+        
+        public VideoMetaData? MetaData { get; private set; }
 
         public ProcessingStatus Status { get; private set; }
 
@@ -55,7 +57,7 @@ namespace FileService.Domain.MediaProcessing
         }
 
         // EF Core
-        public VideoProcess()
+        private VideoProcess()
         {
             
         }
@@ -205,6 +207,11 @@ namespace FileService.Domain.MediaProcessing
             ProgressPercentage = 100;
 
             return UnitResult.Success<Error>();
+        }
+        
+        public void SetMetaData(VideoMetaData metaData)
+        {
+            MetaData = metaData;
         }
     }
 

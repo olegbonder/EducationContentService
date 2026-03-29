@@ -54,7 +54,7 @@ namespace FileService.VideoProcessing.Pipeline.Steps
                 return FileErrors.HlsProcessingFailed("HLS output directory not found");
             }
 
-            if (context.VideoAsset.MetaData is null)
+            if (context.VideoProcess.MetaData is null)
             {
                 _logger.LogWarning("MetaData is null, progress tracking will be disabled for video asset {VideoAssetId}.", context.VideoProcess.VideoAssetId);                
             }

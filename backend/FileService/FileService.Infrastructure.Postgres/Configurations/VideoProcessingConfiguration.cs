@@ -10,7 +10,7 @@ namespace FileService.Infrastructure.Postgres.Configurations
         {
             builder.ToTable("video_processing");
             builder.HasKey(v => v.Id);
-
+            
             builder.Property(v => v.Id).HasColumnName("id");
             builder.Property(v => v.VideoAssetId).HasColumnName("video_asset_id");            
             builder.Property(v => v.Status).HasConversion<string>().HasColumnName("status");
@@ -18,6 +18,14 @@ namespace FileService.Infrastructure.Postgres.Configurations
             builder.Property(v => v.ErrorMessage).HasColumnName("error_message");
             builder.Property(v => v.StartedAt).HasColumnName("started_at");
             builder.Property(v => v.CompletedAt).HasColumnName("completed_at");
+            
+            builder.OwnsOne(v => v.MetaData, mdb =>
+            {
+                mdb.ToJson("meta_data");
+                mdb.Property(md => md.Duration).HasColumnName("duration").IsRequired();
+                mdb.Property(md => md.Width).HasColumnName("width").IsRequired();
+                mdb.Property(md => md.Height).HasColumnName("height").IsRequired();
+            });
 
             builder.OwnsMany(vp => vp.Steps, sb =>
             {

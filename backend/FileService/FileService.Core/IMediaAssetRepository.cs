@@ -7,7 +7,7 @@ namespace FileService.Core;
 
 public interface IMediaAssetRepository
 {
-    Task<Result<Guid, Error>> Add(MediaAsset mediaAsset, CancellationToken cancellationToken);
+    void Add(MediaAsset mediaAsset);
 
     Task<Result<MediaAsset, Error>> GetBy(Expression<Func<MediaAsset, bool>> predicate, CancellationToken cancellationToken);
 

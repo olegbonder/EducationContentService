@@ -19,26 +19,9 @@ public class MediaAssetRepository : IMediaAssetRepository
         _logger = logger;
     }
 
-    public async Task<Result<Guid, Error>> Add(MediaAsset mediaAsset, CancellationToken cancellationToken)
+    public void Add(MediaAsset mediaAsset)
     {
-        var fileInfo = $"Файл: {mediaAsset.MediaData.FileName} Тип: {mediaAsset.AssetType} Путь к S3:{mediaAsset.Key.FullPath}";
-        try
-        {
-            await _context.MediaAssets.AddAsync(mediaAsset, cancellationToken);
-            await _context.SaveChangesAsync(cancellationToken);
-
-            return mediaAsset.Id;
-        }
-        catch(OperationCanceledException ex)
-        {
-            _logger.LogError(ex, "Отмена операции добавления медиа-файла {fileInfo}", fileInfo);
-            return GeneralErrors.Failure("create.media_asset");
-        }
-        catch(Exception ex)
-        {
-            _logger.LogError(ex, "Ошибка добавления медиа-файла {fileInfo}", fileInfo);
-            return GeneralErrors.Failure("create.media_asset");
-        }
+        _context.MediaAssets.Add(mediaAsset);
     }
 
     public async Task<Result<MediaAsset, Error>> GetBy(

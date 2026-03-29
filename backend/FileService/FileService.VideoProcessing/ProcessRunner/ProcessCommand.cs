@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 
 namespace FileService.VideoProcessing.ProcessRunner
 {
-    public record ProcessCommand(string ExecutableFile, string Arguments)
+    public partial record ProcessCommand(string ExecutableFile, string Arguments)
     {
         public string NormalizedArguments => NormalizeWhitespace(Arguments);
 
@@ -10,9 +10,6 @@ namespace FileService.VideoProcessing.ProcessRunner
             => WhitespaceRegex().Replace(input.Trim(), " ");
 
         [GeneratedRegex(@"\s+", RegexOptions.Compiled)]
-        private static Regex WhitespaceRegex()
-        {
-            throw new NotImplementedException();
-        }
+        private static partial Regex WhitespaceRegex();
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System.Net.Http.Json;
 using FileService.Contracts;
 using FileService.Core.Features;
-using FileService.Infrastructure.Postgres;
 using FileService.IntegrationTests.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
@@ -50,8 +49,8 @@ public class MultipartUploadFileTests : FileServiceTestsBase
             var amazonS3Client = Services.GetRequiredService<IAmazonS3>();
 
             var objectResponse = await amazonS3Client.GetObjectAsync(
-                mediaAsset.Key.Location,
-                mediaAsset.Key.Value,
+                mediaAsset.RawKey.Location,
+                mediaAsset.RawKey.Value,
                 cancellationToken
             );
             

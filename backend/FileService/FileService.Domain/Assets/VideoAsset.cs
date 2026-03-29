@@ -32,8 +32,6 @@ public class VideoAsset: MediaAsset
 
     private static readonly string[] AllowedExtensions = ["mp4", "mkv", "avi", "mov"];
 
-    public VideoMetaData? MetaData { get; private set; }
-
     public static UnitResult<Error> Validate(MediaData mediaData)
     {
         if (!AllowedExtensions.Contains(mediaData.FileName.Extension))
@@ -87,11 +85,6 @@ public class VideoAsset: MediaAsset
             
 
         return hlsRootKey.Value.AppendKey(MASTER_PLAYLIST_NAME);
-    }
-
-    public void SetMetaData(VideoMetaData metaData)
-    {
-        MetaData = metaData;
     }
 
     public override bool RequiredProcessing() => true;

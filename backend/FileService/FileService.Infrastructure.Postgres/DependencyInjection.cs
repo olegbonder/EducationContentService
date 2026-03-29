@@ -14,6 +14,7 @@ namespace FileService.Infrastructure.Postgres
         {
             services.AddScoped<IMediaAssetRepository, MediaAssetRepository>();
             services.AddScoped<IVideoProcessingRepository, VideoProcessingRepository>();
+            services.AddScoped<ITransactionManager, TransactionManager>();
             
             services.AddDbContextPool<FileServiceDbContext>((sp, options) =>
             {

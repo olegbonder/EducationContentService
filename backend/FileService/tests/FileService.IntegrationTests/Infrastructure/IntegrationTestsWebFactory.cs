@@ -1,8 +1,10 @@
-﻿using Amazon.S3;
+﻿using System.Data.Common;
+using Amazon.S3;
 using FileService.Core;
 using FileService.Core.FilesStorage;
 using FileService.Infrastructure.Postgres;
 using FileService.Infrastructure.S3;
+using FileService.VideoProcessing.FfmpegProcess;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -11,6 +13,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
+using Npgsql;
+using Respawn;
 using Testcontainers.Minio;
 using Testcontainers.PostgreSql;
 
@@ -30,9 +34,15 @@ public class IntegrationTestsWebFactory : WebApplicationFactory<Program>, IAsync
         .WithUsername("minioadmin")
         .WithPassword("minioadmin")
         .Build();
+    
+    private Respawner _respawner = null;
+    
+    private DbConnection  _dbConnection = null;
         
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        builder.UseEnvironment("Tests");
+        
         builder.ConfigureAppConfiguration((_, config) =>
         {
             config.AddJsonFile(Path.Combine(AppContext.BaseDirectory, "appsettings.IntegrationTests.json"), optional: true);
@@ -72,6 +82,12 @@ public class IntegrationTestsWebFactory : WebApplicationFactory<Program>, IAsync
 
                 return new AmazonS3Client(s3Options.AccessKey, s3Options.SecretKey, config);
             });
+
+            services.RemoveAll<S3BucketInitializationService>();
+
+            //services.RemoveAll<IFfmpegProcessRunner>();
+            
+            //services.AddSingleton<IFfmpegProcessRunner, FfmpegProcessRunner>();
         });
     }
 
@@ -85,6 +101,35 @@ public class IntegrationTestsWebFactory : WebApplicationFactory<Program>, IAsync
         
         await dbContext.Database.EnsureDeletedAsync();
         await dbContext.Database.EnsureCreatedAsync();
+        
+        _dbConnection = new NpgsqlConnection(_dbContainer.GetConnectionString());
+        await _dbConnection.OpenAsync();
+        await InitializeRespawner();
+        
+        IAmazonS3 s3Client = scope.ServiceProvider.GetRequiredService<IAmazonS3>();
+        string[] buckets = ["videos", "previews"];
+        /*foreach (string bucket in buckets)
+        {
+            try
+            {
+                await s3Client.PutBucketAsync(bucket);
+            }
+            catch (AmazonS3Exception ex) when(ex.ErrorCode == "BucketAlreadyOwnedByYouException")
+            {
+            }
+        }*/
+    }
+
+    private async Task InitializeRespawner()
+    {
+        _respawner = await Respawner.CreateAsync(
+            _dbConnection,
+            new RespawnerOptions
+            {
+                DbAdapter = DbAdapter.Postgres,
+                SchemasToInclude = ["public"]
+            }
+        );
     }
 
     public async Task DisposeAsync()
@@ -95,4 +140,11 @@ public class IntegrationTestsWebFactory : WebApplicationFactory<Program>, IAsync
         await _minioContainer.StopAsync();
         await _minioContainer.DisposeAsync();
     }
+
+    public async Task ResetDatabaseAsync()
+    {
+        await _respawner.ResetAsync(_dbConnection);
+    }
+    
+    
 }

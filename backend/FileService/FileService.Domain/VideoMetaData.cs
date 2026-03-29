@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CSharpFunctionalExtensions;
+﻿using CSharpFunctionalExtensions;
 using Shared.SharedKernel;
 
 namespace FileService.Domain
@@ -14,6 +10,12 @@ namespace FileService.Domain
         public int Width { get; }
 
         public int Height { get; }
+
+        // EF Core
+        private VideoMetaData()
+        {
+            
+        }
 
         private VideoMetaData(TimeSpan duration, int width, int height)
         {

@@ -42,7 +42,7 @@ namespace FileService.VideoProcessing.Pipeline.Steps
             if (metadataResult.IsFailure)
                 return metadataResult.Error;
 
-            context.VideoAsset.SetMetaData(metadataResult.Value);
+            context.VideoProcess.SetMetaData(metadataResult.Value);
 
            return context;
         }
