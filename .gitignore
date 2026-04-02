@@ -363,3 +363,5 @@ MigrationBackup/
 FodyWeavers.xsd
 /.env.education-content.service
 /nuget.config
+backend/EducationContentService/.idea/.idea.EducationContentService/.idea/vcs.xml
+backend/EducationContentService/.idea/.idea.EducationContentService/.idea/indexLayout.xml

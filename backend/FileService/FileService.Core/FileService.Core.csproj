@@ -2,6 +2,9 @@
   <ItemGroup>
     <PackageReference Include="Core" />
     <PackageReference Include="Framework" />
+    <PackageReference Include="IntegrationEvents" />
+    <PackageReference Include="WolverineFx.Postgresql" />
+    <PackageReference Include="WolverineFx.RabbitMQ" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FileService.Contracts\FileService.Contracts.csproj" />

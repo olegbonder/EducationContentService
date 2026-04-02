@@ -16,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Элементы решен
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework", "Framework\Framework.csproj", "{98E63AF1-CD87-4B47-98AE-3F52EBCD0674}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationEvents", "IntegrationEvents\IntegrationEvents.csproj", "{C87C3FA2-D401-4E19-BE3E-6600EB4EC782}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +36,10 @@ Global
 		{98E63AF1-CD87-4B47-98AE-3F52EBCD0674}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{98E63AF1-CD87-4B47-98AE-3F52EBCD0674}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{98E63AF1-CD87-4B47-98AE-3F52EBCD0674}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C87C3FA2-D401-4E19-BE3E-6600EB4EC782}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C87C3FA2-D401-4E19-BE3E-6600EB4EC782}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C87C3FA2-D401-4E19-BE3E-6600EB4EC782}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C87C3FA2-D401-4E19-BE3E-6600EB4EC782}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

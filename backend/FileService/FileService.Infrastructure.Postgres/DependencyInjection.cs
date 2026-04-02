@@ -18,7 +18,7 @@ namespace FileService.Infrastructure.Postgres
             
             services.AddDbContextPool<FileServiceDbContext>((sp, options) =>
             {
-                string? connectionString = configuration.GetConnectionString(Constants.DATABASE_CONNECTIONSTRING);
+                string? connectionString = configuration.GetConnectionString(ConnectionStringNames.DATABASE);
                 var hostEnvironment = sp.GetRequiredService<IHostEnvironment>();
                 var loggerFactory = sp.GetRequiredService<ILoggerFactory>();
 
@@ -35,7 +35,7 @@ namespace FileService.Infrastructure.Postgres
 
             services.AddDbContextPool<IReadDbContext, FileServiceDbContext>((sp, options) => 
             {
-                string? connectionString = configuration.GetConnectionString(Constants.DATABASE_CONNECTIONSTRING);
+                string? connectionString = configuration.GetConnectionString(ConnectionStringNames.DATABASE);
                 var hostEnvironment = sp.GetRequiredService<IHostEnvironment>();
                 var loggerFactory = sp.GetRequiredService<ILoggerFactory>();
 
