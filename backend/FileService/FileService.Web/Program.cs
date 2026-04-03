@@ -1,6 +1,7 @@
-using Serilog;
+﻿using Serilog;
 using System.Globalization;
 using FileService.Web.Configuration;
+using FileService.Core.Messaging;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
@@ -20,6 +21,8 @@ try
     builder.Configuration.AddEnvironmentVariables();
 
     builder.Services.AddConfiguration(builder.Configuration);
+
+    builder.AddWolverine();
 
     var app = builder.Build();
 
