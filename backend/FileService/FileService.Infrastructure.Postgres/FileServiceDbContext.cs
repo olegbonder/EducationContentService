@@ -3,6 +3,7 @@ using FileService.Domain.Assets;
 using FileService.Domain.MediaProcessing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Wolverine.EntityFrameworkCore;
 
 namespace FileService.Infrastructure.Postgres;
 
@@ -12,19 +13,12 @@ public class FileServiceDbContext : DbContext, IReadDbContext
         : base(options)
     {
     }
-
-    /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        if (!optionsBuilder.IsConfigured)
-        {
-            optionsBuilder.UseNpgsql(_connectionString);
-            optionsBuilder.UseLoggerFactory(CreateLoggerFactory());
-            optionsBuilder.EnableSensitiveDataLogging();
-        }
-    }*/
+    
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.HasDefaultSchema("public");
+        modelBuilder.MapWolverineEnvelopeStorage("public");
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(FileServiceDbContext).Assembly);
     }
 

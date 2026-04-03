@@ -1,4 +1,5 @@
 ﻿using FileService.Core;
+using FileService.Core.Database;
 using FileService.Infrastructure.Postgres.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -15,6 +16,7 @@ namespace FileService.Infrastructure.Postgres
             services.AddScoped<IMediaAssetRepository, MediaAssetRepository>();
             services.AddScoped<IVideoProcessingRepository, VideoProcessingRepository>();
             services.AddScoped<ITransactionManager, TransactionManager>();
+            services.AddScoped<IOutboxService, OutboxService>();
             
             services.AddDbContextPool<FileServiceDbContext>((sp, options) =>
             {
