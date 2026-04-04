@@ -1,4 +1,5 @@
 ﻿using FileService.Core.Features;
+using FileService.Core.Messaging;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,6 +12,7 @@ namespace FileService.Core
             var assembly = typeof(DependencyInjectionCoreExtensions).Assembly;
             services.AddValidatorsFromAssembly(assembly);
 
+            services.AddScoped<IAssetCreatedEventPublisher, AssetCreatedEventPublisher>();
             services.AddScoped<StartMultiPartUploadHandler>();
             services.AddScoped<CompleteMultiPartUploadHandler>();
 

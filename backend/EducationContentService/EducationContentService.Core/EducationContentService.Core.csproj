@@ -9,6 +9,7 @@
     <PackageReference Include="FileService.Contracts" />
     <PackageReference Include="Framework" />
     <PackageReference Include="IntegrationEvents" />
+    <PackageReference Include="WolverineFx.EntityFrameworkCore" />
     <PackageReference Include="WolverineFx.Postgresql" />
     <PackageReference Include="WolverineFx.RabbitMQ" />
   </ItemGroup>

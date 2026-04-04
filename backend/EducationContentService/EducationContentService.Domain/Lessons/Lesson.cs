@@ -4,7 +4,7 @@ namespace EducationContentService.Domain.Lessons
 {
     public sealed class Lesson
     {
-        public Lesson(Guid? id, Title title, Description description, Guid videoId)
+        public Lesson(Guid? id, Title title, Description description)
         {
             Id = id ?? Guid.NewGuid();
             Title = title;
@@ -13,7 +13,6 @@ namespace EducationContentService.Domain.Lessons
             UpdatedAt = DateTime.UtcNow;
             IsDeleted = false;
             DeleteAt = null;
-            VideoId = videoId;
         }
 
         // EF Core

@@ -10,8 +10,11 @@ public sealed record MediaOwner
         "module",
         "user"
     ];
-    public string Context { get; }
-    public Guid EntityId { get; }
+    public string Context { get; private set; }
+    public Guid EntityId { get; private set; }
+
+    // Конструктор для EF Core
+    private MediaOwner() { }
 
     private MediaOwner(string context, Guid entityId)
     {

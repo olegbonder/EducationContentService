@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Wolverine;
+using Wolverine.EntityFrameworkCore;
 using Wolverine.Postgresql;
 using Wolverine.RabbitMQ;
 
@@ -28,6 +29,7 @@ public static class WolverineConfiguration
     private static void ConfigureDurableMessaging(this WolverineOptions opts, string postgresConnectionString)
     {
         opts.PersistMessagesWithPostgresql(postgresConnectionString, "public");
+        opts.UseEntityFrameworkCoreTransactions();
         opts.Policies.UseDurableOutboxOnAllSendingEndpoints();
         opts.Policies.UseDurableOutboxOnAllSendingEndpoints();
     }

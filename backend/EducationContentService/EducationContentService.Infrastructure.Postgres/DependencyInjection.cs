@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Wolverine.EntityFrameworkCore;
 
 namespace EducationContentService.Infrastructure.Postgres
 {
@@ -13,6 +14,9 @@ namespace EducationContentService.Infrastructure.Postgres
         public static IServiceCollection AddInfrastructurePostgres(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<ILessonsRepository, LessonsRepository>();
+            services.AddScoped<ITransactionManager, TransactionManager>();
+            services.AddScoped<IOutboxService, OutboxService>();
+            services.AddScoped<IDbContextOutbox<EducationDbContext>, DbContextOutbox<EducationDbContext>>();
 
             services.AddDbContextPool<EducationDbContext>((sp, options) =>
             {

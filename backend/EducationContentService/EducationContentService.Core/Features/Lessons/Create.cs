@@ -68,7 +68,7 @@ namespace EducationContentService.Core.Features.Lessons
 
             var description = Description.Create(request.Description).Value;
 
-            var lesson = new Lesson(Guid.NewGuid(), title, description, request.VideoId);
+            var lesson = new Lesson(Guid.NewGuid(), title, description);
 
             var result = await _lessonsRepository.AddAsync(lesson, cancellationToken);
             if (result.IsFailure)
