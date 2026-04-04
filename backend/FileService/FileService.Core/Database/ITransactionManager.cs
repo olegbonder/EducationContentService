@@ -2,7 +2,7 @@
 using CSharpFunctionalExtensions;
 using Shared.SharedKernel;
 
-namespace FileService.Core
+namespace FileService.Core.Database
 {
     public interface ITransactionManager
     {

@@ -6,6 +6,6 @@ public record StartMultiPartUploadRequest
     string AssetType,
     string ContentType,
     long Size,
-    string Context,
-    Guid ContextId
+    string OwnerType,
+    Guid OwnerId
 );

@@ -1,7 +1,10 @@
-﻿namespace EducationContentService.Core.Database
+﻿using CSharpFunctionalExtensions;
+using Shared.SharedKernel;
+
+namespace EducationContentService.Core.Database
 {
     public interface ITransactionManager
     {
-        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+        Task<UnitResult<Error>> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using IntegrationEvents;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Wolverine;
 using Wolverine.EntityFrameworkCore;
 using Wolverine.Postgresql;
-using Wolverine.RabbitMQ;
 
 namespace FileService.Core.Messaging;
 
@@ -31,10 +30,5 @@ public static class WolverineConfiguration
         opts.UseEntityFrameworkCoreTransactions();
         opts.Policies.UseDurableOutboxOnAllSendingEndpoints();
         opts.Policies.UseDurableInboxOnAllListeners();
-    }
-    
-    private static void ConfigureStandardErrorPolicies(this WolverineOptions opts)
-    {
-        
     }
 }

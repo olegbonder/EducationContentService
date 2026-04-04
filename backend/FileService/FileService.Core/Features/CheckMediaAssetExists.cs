@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using FileService.Contracts.Dtos;
+using FileService.Core.Database;
 using Framework;
 using Framework.Endpoints;
 using Microsoft.AspNetCore.Builder;

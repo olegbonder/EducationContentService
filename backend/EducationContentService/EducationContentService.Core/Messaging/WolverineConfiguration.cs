@@ -21,7 +21,7 @@ public static class WolverineConfiguration
             
             opts.ConfigureDurableMessaging(postgresConnectionString);
             opts.ConfigureRabbitMq(rabbitMQConnectionString);
-            opts.ConfigureStandardErrorPolicies();
+            //opts.ConfigureStandardErrorPolicies();
         }, ExtensionDiscovery.ManualOnly);
     }
 
@@ -30,10 +30,5 @@ public static class WolverineConfiguration
         opts.PersistMessagesWithPostgresql(postgresConnectionString, "public");
         opts.Policies.UseDurableOutboxOnAllSendingEndpoints();
         opts.Policies.UseDurableOutboxOnAllSendingEndpoints();
-    }
-    
-    private static void ConfigureStandardErrorPolicies(this WebApplicationBuilder builder)
-    {
-        
     }
 }

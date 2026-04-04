@@ -1,4 +1,4 @@
-﻿using FileService.Core;
+﻿using FileService.Core.Database;
 using FileService.Domain.Assets;
 using FileService.Domain.MediaProcessing;
 using Microsoft.EntityFrameworkCore;

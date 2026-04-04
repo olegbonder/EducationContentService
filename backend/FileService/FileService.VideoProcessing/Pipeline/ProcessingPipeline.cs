@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using FileService.Core;
+using FileService.Core.Database;
 using FileService.Domain.MediaProcessing;
 using Microsoft.Extensions.Logging;
 using Shared.SharedKernel;

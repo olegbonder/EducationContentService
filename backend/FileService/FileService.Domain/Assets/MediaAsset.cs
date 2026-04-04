@@ -10,7 +10,7 @@ namespace FileService.Domain.Assets
         public MediaData MediaData { get; protected set; } = null!;
 
         public AssetType AssetType { get; protected set; }
-        //public MediaOwner Owner { get; protected set; }
+        public MediaOwner Owner { get; protected set; }
 
         public DateTime CreatedAt { get; protected set; } = DateTime.UtcNow;
 
@@ -29,6 +29,7 @@ namespace FileService.Domain.Assets
         protected MediaAsset(
             Guid id, 
             MediaData mediaData,
+            MediaOwner owner,
             MediaStatus status,
             AssetType assetType,
             StorageKey key,
@@ -40,6 +41,7 @@ namespace FileService.Domain.Assets
             AssetType = assetType;            
             CreatedAt = DateTime.UtcNow;
             UpdatedAt = CreatedAt;
+            Owner = owner;
             if (isDirectUpload)
             {
                 Key = key;
@@ -51,17 +53,20 @@ namespace FileService.Domain.Assets
 
         }
 
-        public static Result<MediaAsset, Error> CreateForUpload(MediaData mediaData,  AssetType assetType)
+        public static Result<MediaAsset, Error> CreateForUpload(
+            MediaData mediaData,
+            AssetType assetType,
+            MediaOwner owner)
         {
             var assetId = Guid.NewGuid();
 
             switch (assetType)
             {
                 case AssetType.VIDEO:
-                    var videoResult = VideoAsset.CreateForUpload(assetId, mediaData);
+                    var videoResult = VideoAsset.CreateForUpload(assetId, mediaData, owner);
                     return videoResult.IsFailure ? videoResult.Error : videoResult.Value;
                 case AssetType.PREVIEW:
-                    var previewResult = PreviewAsset.CreateForUpload(assetId, mediaData);
+                    var previewResult = PreviewAsset.CreateForUpload(assetId, mediaData, owner);
                     return previewResult.IsFailure ? previewResult.Error : previewResult.Value;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(assetType), assetType, null);

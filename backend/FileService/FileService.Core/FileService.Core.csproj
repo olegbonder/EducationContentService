@@ -11,7 +11,4 @@
     <ProjectReference Include="..\FileService.Contracts\FileService.Contracts.csproj" />
     <ProjectReference Include="..\FileService.Domain\FileService.Domain.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="HttpCommunication\" />
-  </ItemGroup>
 </Project>

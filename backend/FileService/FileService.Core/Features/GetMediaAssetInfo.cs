@@ -1,6 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
-using FileService.Contracts;
 using FileService.Contracts.Dtos;
+using FileService.Core.Database;
 using FileService.Core.FilesStorage;
 using FileService.Domain;
 using Framework;

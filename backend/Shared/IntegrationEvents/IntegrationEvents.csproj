@@ -2,7 +2,7 @@
   
   <PropertyGroup>
     <PackageId>IntegrationEvents</PackageId>
-    <Version>0.0.2</Version>
+    <Version>0.0.4</Version>
     <Authors>Manuilov Oleg</Authors>
     <PackageDescription>Shared integration events for messaging</PackageDescription>
     <RepositoryUrl>https://github.com/olegbonder/EducationContentService</RepositoryUrl>
@@ -10,6 +10,11 @@
   
   <ItemGroup>
     <Folder Include="Education\" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Npgsql" />
+    <PackageReference Include="WolverineFx" />
   </ItemGroup>
 
 </Project>

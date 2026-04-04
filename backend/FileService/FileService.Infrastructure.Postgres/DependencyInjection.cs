@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Wolverine.EntityFrameworkCore;
 
 namespace FileService.Infrastructure.Postgres
 {
@@ -17,6 +18,7 @@ namespace FileService.Infrastructure.Postgres
             services.AddScoped<IVideoProcessingRepository, VideoProcessingRepository>();
             services.AddScoped<ITransactionManager, TransactionManager>();
             services.AddScoped<IOutboxService, OutboxService>();
+            services.AddScoped<IDbContextOutbox<FileServiceDbContext>, DbContextOutbox<FileServiceDbContext>>();
             
             services.AddDbContextPool<FileServiceDbContext>((sp, options) =>
             {

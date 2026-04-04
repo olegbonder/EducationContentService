@@ -12,32 +12,32 @@ using Shared.SharedKernel;
 
 namespace EducationContentService.Core.Features.Lessons
 {
-    public sealed class UpdateVideoEndpoint : IEndpoint
+    public sealed class AttachVideoEndpoint : IEndpoint
     {
         public void MapEndPoint(IEndpointRouteBuilder routeBuilder)
         {
             routeBuilder.MapPatch("/lessons/{lessonId:guid}/video", 
                 async Task<EndpointResult<Guid>>(
                         [FromRoute] Guid lessonId,
-                        [FromBody] UpdateVideoRequest request, 
-                        [FromServices] UpdateVideoHanlder handler, 
+                        [FromBody] AttachVideoRequest request, 
+                        [FromServices] AttachVideoHanlder handler, 
                         CancellationToken cancellationToken) =>
                     await handler.Handle(lessonId, request, cancellationToken)
             );
         }
     }
 
-    public record UpdateVideoRequest(Guid? VideoId);
+    public record AttachVideoRequest(Guid? VideoId);
 
-    public sealed class UpdateVideoHanlder
+    public sealed class AttachVideoHanlder
     {
-        private readonly ILogger<UpdateVideoHanlder> _logger;
+        private readonly ILogger<AttachVideoHanlder> _logger;
         private readonly ILessonsRepository _lessonsRepository;
         private readonly ITransactionManager _transactionManager;
         private readonly IFileCommunicationService _fileCommunicationService;
 
-        public UpdateVideoHanlder(
-            ILogger<UpdateVideoHanlder> logger, 
+        public AttachVideoHanlder(
+            ILogger<AttachVideoHanlder> logger, 
             ILessonsRepository lessonsRepository,
             ITransactionManager transactionManager,
             IFileCommunicationService fileCommunicationService)
@@ -50,7 +50,7 @@ namespace EducationContentService.Core.Features.Lessons
 
         public async Task<Result<Guid, Error>> Handle(
             Guid lessonId,
-            UpdateVideoRequest request, 
+            AttachVideoRequest request, 
             CancellationToken cancellationToken)
         {
             Guid? videoId = request.VideoId;
@@ -70,7 +70,9 @@ namespace EducationContentService.Core.Features.Lessons
             
             lessonResult.Value.UpdateVideoId(videoId);
 
-            await _transactionManager.SaveChangesAsync(cancellationToken);
+            var result = await _transactionManager.SaveChangesAsync(cancellationToken);
+            if (result.IsFailure)
+                return result.Error;
 
             _logger.LogInformation("Updated video for lesson {Id}", lessonResult.Value.Id);
             

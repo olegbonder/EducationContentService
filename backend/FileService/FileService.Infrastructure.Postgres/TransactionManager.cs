@@ -1,7 +1,6 @@
-﻿using System.Data;
-using System.Data.Common;
+﻿using System.Data.Common;
 using CSharpFunctionalExtensions;
-using FileService.Core;
+using FileService.Core.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;

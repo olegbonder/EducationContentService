@@ -1,4 +1,5 @@
 ﻿using IntegrationEvents;
+using IntegrationEvents.Education;
 using IntegrationEvents.Files.Events;
 using Wolverine;
 using Wolverine.RabbitMQ;
