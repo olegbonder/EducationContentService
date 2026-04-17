@@ -3,6 +3,9 @@
     <PackageReference Include="Core" />
     <PackageReference Include="Framework" />
     <PackageReference Include="IntegrationEvents" />
+    <PackageReference Include="Quartz.Extensions.Hosting" />
+    <PackageReference Include="Quartz.Serialization.Json" />
+    <PackageReference Include="SilkierQuartz" />
     <PackageReference Include="WolverineFx.EntityFrameworkCore" />
     <PackageReference Include="WolverineFx.Postgresql" />
     <PackageReference Include="WolverineFx.RabbitMQ" />
