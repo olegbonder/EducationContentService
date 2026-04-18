@@ -1,5 +1,7 @@
-﻿using Framework.EndPointSettings;
+﻿using CrystalQuartz.AspNetCore;
+using Framework.EndPointSettings;
 using Framework.Middlewares;
+using Quartz;
 using Serilog;
 
 namespace FileService.Web.Configuration
@@ -26,6 +28,13 @@ namespace FileService.Web.Configuration
             app.UseSwaggerUI(options =>
             {
                 options.SwaggerEndpoint("/openapi/v1.json", "FileService V1");
+            });
+            
+            app.UseRouting();
+            app.UseCrystalQuartz(() => 
+            {
+                var factory = app.Services.GetRequiredService<ISchedulerFactory>();
+                return factory.GetScheduler().GetAwaiter().GetResult();
             });
 
             var apiGroup = app.MapGroup("/api").WithOpenApi();

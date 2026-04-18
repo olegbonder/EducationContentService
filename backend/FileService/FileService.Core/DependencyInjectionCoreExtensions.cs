@@ -9,7 +9,7 @@ namespace FileService.Core
 {
     public static class DependencyInjectionCoreExtensions
     {
-        public static IServiceCollection AddCore(this IServiceCollection services)
+        public static IServiceCollection AddCore(this IServiceCollection services, IConfiguration configuration)
         {
             var assembly = typeof(DependencyInjectionCoreExtensions).Assembly;
             services.AddValidatorsFromAssembly(assembly);
@@ -18,6 +18,7 @@ namespace FileService.Core
             services.AddScoped<StartMultiPartUploadHandler>();
             services.AddScoped<CompleteMultiPartUploadHandler>();
 
+            services.AddQuartzServices(configuration);
             return services;
         }
 
@@ -37,7 +38,19 @@ namespace FileService.Core
                    persistenceOptions.UseNewtonsoftJsonSerializer();
                    persistenceOptions.UseProperties = true;
                });
+               
+               /*var testJobKey = new JobKey("testJob");
+               options.AddJob<TestJob> (opts => opts.WithIdentity(testJobKey));
+               options.AddTrigger(opts => opts
+                   .ForJob(testJobKey)
+                   .WithIdentity("TestJob-trigger")
+                    .StartNow()
+                   .WithSimpleSchedule(x => x
+                       .WithIntervalInSeconds(1)
+                       .RepeatForever()));*/
             });
+            
+            services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
 
             return services;
         }

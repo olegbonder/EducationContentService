@@ -21,7 +21,7 @@ namespace FileService.Web.Configuration
                 .AddCors();
 
             services
-                .AddCore()
+                .AddCore(configuration)
                 .AddInfrastructurePostgres(configuration);
             
             return services;

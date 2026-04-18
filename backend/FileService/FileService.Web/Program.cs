@@ -2,6 +2,7 @@
 using System.Globalization;
 using FileService.Web.Configuration;
 using FileService.Core.Messaging;
+using FileService.Infrastructure.Postgres.Initializers;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
@@ -26,9 +27,16 @@ try
 
     var app = builder.Build();
 
+    using (var scope = app.Services.CreateScope())
+    {
+        var quartzDbInitializer = scope.ServiceProvider.GetRequiredService<QuartzDbInitializer>();
+        await quartzDbInitializer.InitializeAsync();
+
+    }
+
     app.Configure();
 
-    app.Run();
+    await app.RunAsync();
 }
 catch (Exception ex)
 {

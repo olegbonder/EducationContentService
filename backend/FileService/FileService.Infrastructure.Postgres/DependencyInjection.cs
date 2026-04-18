@@ -1,5 +1,6 @@
 ﻿using FileService.Core;
 using FileService.Core.Database;
+using FileService.Infrastructure.Postgres.Initializers;
 using FileService.Infrastructure.Postgres.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -14,6 +15,7 @@ namespace FileService.Infrastructure.Postgres
     {
         public static IServiceCollection AddInfrastructurePostgres(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddTransient<QuartzDbInitializer>();
             services.AddScoped<IMediaAssetRepository, MediaAssetRepository>();
             services.AddScoped<IVideoProcessingRepository, VideoProcessingRepository>();
             services.AddScoped<ITransactionManager, TransactionManager>();

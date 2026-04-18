@@ -365,3 +365,11 @@ FodyWeavers.xsd
 /nuget.config
 backend/EducationContentService/.idea/.idea.EducationContentService/.idea/vcs.xml
 backend/EducationContentService/.idea/.idea.EducationContentService/.idea/indexLayout.xml
+.idea/encodings.xml
+.idea/indexLayout.xml
+.idea/vcs.xml
+backend/.idea/encodings.xml
+backend/.idea/indexLayout.xml
+backend/.idea/vcs.xml
+backend/FileService/.idea/.idea.FileService/.idea/dataSources.xml
+backend/FileService/.idea/.idea.FileService/.idea/db-forest-config.xml
