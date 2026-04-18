@@ -29,5 +29,21 @@
         {
             return Error.Failure("server.failure", message ?? "Серверная ошибка");
         }
+
+        public static Error ConcurrencyConflict()
+        {
+            return Error.Conflict("db.concurrency.conflict", "Конфликт параллельного обновления данных");
+        }
+
+        public static Error OperationCancelled()
+        {
+            return Error.Failure("operation.cancelled", "Операция была отменена");
+        }
+
+        public static Error DatabaseError(string? message = null)
+        {
+            return Error.Failure("db.error", message ?? "Ошибка при работе с базой данных");
+        }
+
     }
 }
