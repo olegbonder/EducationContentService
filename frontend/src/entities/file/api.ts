@@ -1,15 +1,14 @@
 import { fsApiClient } from "@/shared/api/axios-instance";
+import { AssetType, OwnerType } from "./types";
 import { Envelope } from "@/shared/api/evelope";
 import axios from "axios";
-
-export type AssetType = "video" | "preview";
 
 export type StartMultipartUploadRequest = {
   fileName: string;
   contentType: string;
   size: number;
   assetType: AssetType;
-  ownerType: string;
+  ownerType: OwnerType;
   ownerId: string;
 };
 
@@ -36,7 +35,7 @@ export type CompleteMultipartUploadRequest = {
   partETags: PartETag[];
 };
 
-export const videoApi = {
+export const fileApi = {
   startMultipartUpload: async (
     request: StartMultipartUploadRequest,
   ): Promise<StartMultipartUploadResponse> => {
@@ -45,11 +44,16 @@ export const videoApi = {
     >("/files/multipart-upload", request);
     return response.data.result!;
   },
-  uploadChunk: async (uploadUrl: string, chunk: Blob): Promise<string> => {
+  uploadChunk: async (
+    uploadUrl: string,
+    chunk: Blob,
+    signal?: AbortSignal,
+  ): Promise<string> => {
     const response = await axios.put(uploadUrl, chunk, {
       headers: {
         "Content-Type": chunk.type,
       },
+      signal,
     });
 
     const eTag = response.headers.etag?.replace(/"/g, "") || ""; // Удаляем кавычки из eTag

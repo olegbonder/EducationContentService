@@ -19,6 +19,7 @@ import { useGetLessonFilter } from "./model/lessons-filters-store";
 import { useLessonsList } from "./model/use-lessons-list";
 import { UpdateLessonDialog } from "./update-lesson-dialog";
 import { LessonVideoUploadDialog } from "./lesson-video-upload-dialog";
+import { FileUploadDialog } from "@/entities/file/ui/file-upload-dialog";
 
 export function LessonsList() {
   const globalSearch = useGetGlobalSearch();
@@ -122,12 +123,13 @@ export function LessonsList() {
         <div ref={cursorRef} className="flex justify-center py-4">
           {isFetchingNextPage && <Spinner />}
         </div>
-        {selectedLesson && (
-          <LessonVideoUploadDialog
-            key={selectedLesson.id}
-            open={selectedLesson !== undefined && isVideoDialogOpen}
+        {selectedLesson && isVideoDialogOpen && (
+          <FileUploadDialog
+            open={isVideoDialogOpen}
             onOpenChange={setVideoDialogOpen}
-            lesson={selectedLesson}
+            ownerId={selectedLesson.id}
+            ownerType="lesson"
+            assetType="video"
           />
         )}
       </div>

@@ -7,12 +7,18 @@ export function DropZone({
   onDragLeave,
   onDrop,
   onClick,
+  label = "Перетащите файл сюда",
+  description = "или нажмите, чтобы загрузить",
+  icon,
 }: {
   isDragging: boolean;
   onDragOver: (e: React.DragEvent) => void;
   onDragLeave: (e: React.DragEvent) => void;
   onDrop: (e: React.DragEvent) => void;
   onClick?: () => void;
+  label?: string;
+  description?: string;
+  icon?: React.ReactNode;
 }) {
   return (
     <div
@@ -27,14 +33,11 @@ export function DropZone({
       onDrop={onDrop}
       onClick={onClick}
     >
-      <Upload className="w-10 h-10 mx-auto mb-3 text-muted-foreground" />
-      <p className="text-sm font-medium">Перетащите видео</p>
-      <p className="text-xs text-muted-foreground mt-1">
-        или нажмите, чтобы загрузить
-      </p>
-      <p className="text-xs text-muted-foreground mt-3">
-        MP4, WebM, MDV до 5 ГБ
-      </p>
+      {icon ?? (
+        <Upload className="w-10 h-10 mx-auto mb-3 text-muted-foreground" />
+      )}
+      <p className="text-sm font-medium">{label}</p>
+      <p className="text-xs text-muted-foreground mt-1">{description}</p>
     </div>
   );
 }
