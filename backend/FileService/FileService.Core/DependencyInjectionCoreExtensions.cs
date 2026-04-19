@@ -20,6 +20,7 @@ namespace FileService.Core
             services.AddScoped<CheckMediaAssetExistsHandler>();
             services.AddScoped<GetMediaAssetInfoHandler>();
             services.AddScoped<GetMediaAssetsHandler>();
+            services.AddScoped<AbortMultiPartUploadHandler>();
 
             services.AddQuartzServices(configuration);
             return services;

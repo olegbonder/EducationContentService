@@ -98,6 +98,7 @@ public sealed class StartMultiPartUploadHandler
         if (chunksUploadUrlsResult.IsFailure)
             return chunksUploadUrlsResult.Error;
 
+        mediaAsset.SetUploadId(startUploadResult.Value);
         _mediaAssetRepository.Add(mediaAssetResult.Value);
         
         var publishResult = await _assetCreatedEventPublisher.PublishAsync(mediaAssetResult.Value);

@@ -38,10 +38,11 @@ export type CompleteMultipartUploadRequest = {
 export const fileApi = {
   startMultipartUpload: async (
     request: StartMultipartUploadRequest,
+    signal?: AbortSignal,
   ): Promise<StartMultipartUploadResponse> => {
     const response = await fsApiClient.post<
       Envelope<StartMultipartUploadResponse>
-    >("/files/multipart-upload", request);
+    >("/files/multipart-upload", request, { signal });
     return response.data.result!;
   },
   uploadChunk: async (
@@ -61,11 +62,19 @@ export const fileApi = {
   },
   completeMultipartUpload: async (
     request: CompleteMultipartUploadRequest,
+    signal?: AbortSignal,
   ): Promise<void> => {
     const response = await fsApiClient.post<Envelope<void>>(
       "/files/complete-upload",
       request,
+      { signal },
     );
     return response.data.result!;
+  },
+
+  abortMultipartUpload: async (mediaAssetId: string): Promise<void> => {
+    await fsApiClient.post(`/files/abort-upload`, {
+      mediaAssetId,
+    });
   },
 };

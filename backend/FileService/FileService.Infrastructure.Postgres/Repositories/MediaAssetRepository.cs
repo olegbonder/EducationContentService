@@ -34,6 +34,11 @@ public class MediaAssetRepository : IMediaAssetRepository
 
         return mediaAsset;
     }
+
+    public void Delete(MediaAsset mediaAsset)
+    {
+        _context.MediaAssets.Remove(mediaAsset);
+    }
         
 
     public async Task<Result<MediaAsset, Error>> GetById(Guid mediaAssetId, CancellationToken cancellationToken) =>

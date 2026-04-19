@@ -37,4 +37,9 @@ public interface IS3Provider
         CancellationToken cancellationToken);
 
     Task<UnitResult<Error>> DeleteFileAsync(StorageKey storageKey, CancellationToken cancellationToken);
+
+    Task<UnitResult<Error>> AbortMultiPartUploadAsync(
+        StorageKey storageKey,
+        string uploadId,
+        CancellationToken cancellationToken);
 }

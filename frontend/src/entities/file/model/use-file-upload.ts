@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { AssetType, OwnerType, UploadProgress } from "../types";
 import {
   ChunkUploadUrl,
@@ -18,6 +18,8 @@ export type Props = {
 };
 
 export function useFileUpload({ ownerId, ownerType, assetType }: Props) {
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const currentUploadRef = useRef<{ mediaAssetId: string } | null>(null);
   const [uploadState, setUploadState] = useState<UploadProgress>({
     status: "idle",
     progress: 0,
@@ -49,24 +51,40 @@ export function useFileUpload({ ownerId, ownerType, assetType }: Props) {
         fileSize: file.size,
       });
 
+      abortControllerRef.current = new AbortController();
+      const signal = abortControllerRef.current.signal;
+
       const uploadData: StartMultipartUploadResponse =
-        await fileApi.startMultipartUpload({
-          fileName: file.name,
-          contentType: file.type,
-          size: file.size,
-          assetType,
-          ownerType,
-          ownerId,
-        });
+        await fileApi.startMultipartUpload(
+          {
+            fileName: file.name,
+            contentType: file.type,
+            size: file.size,
+            assetType,
+            ownerType,
+            ownerId,
+          },
+          signal,
+        );
       const { mediaAssetId, chunkUploadUrls, chunkSize } = uploadData;
 
-      const partETags = await uploadChunks(file, chunkUploadUrls, chunkSize);
+      currentUploadRef.current = { mediaAssetId };
 
-      await fileApi.completeMultipartUpload({
-        mediaAssetId,
-        uploadId: uploadData.uploadId,
-        partETags,
-      });
+      const partETags = await uploadChunks(
+        file,
+        chunkUploadUrls,
+        chunkSize,
+        signal,
+      );
+
+      await fileApi.completeMultipartUpload(
+        {
+          mediaAssetId,
+          uploadId: uploadData.uploadId,
+          partETags,
+        },
+        signal,
+      );
 
       setUploadState((prev) => ({
         ...prev,
@@ -85,6 +103,15 @@ export function useFileUpload({ ownerId, ownerType, assetType }: Props) {
           ? error.message
           : "Ошибка загрузки файла";
 
+      const current = currentUploadRef.current;
+      if (current) {
+        try {
+          currentUploadRef.current = null;
+          await fileApi.abortMultipartUpload(current.mediaAssetId);
+        } catch (e) {}
+      }
+
+      currentUploadRef.current = null;
       setUploadState((prev) => ({
         ...prev,
         status: "failed",
@@ -98,6 +125,7 @@ export function useFileUpload({ ownerId, ownerType, assetType }: Props) {
     file: File,
     chunks: ChunkUploadUrl[],
     chunkSize: number,
+    signal: AbortSignal,
   ): Promise<PartETag[]> => {
     const partETags: PartETag[] = [];
 
@@ -107,7 +135,11 @@ export function useFileUpload({ ownerId, ownerType, assetType }: Props) {
       const end = Math.min(start + chunkSize, file.size);
 
       const chunk = file.slice(start, end);
-      const eTag = await fileApi.uploadChunk(chunkInfo.uploadUrl, chunk);
+      const eTag = await fileApi.uploadChunk(
+        chunkInfo.uploadUrl,
+        chunk,
+        signal,
+      );
       partETags.push({
         partNumber: chunkInfo.partNumber,
         eTag,
@@ -126,8 +158,33 @@ export function useFileUpload({ ownerId, ownerType, assetType }: Props) {
     return partETags;
   };
 
+  const cancel = async () => {
+    abortControllerRef.current?.abort();
+
+    const current = currentUploadRef.current;
+    if (current) {
+      try {
+        await fileApi.abortMultipartUpload(current.mediaAssetId);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    currentUploadRef.current = null;
+
+    setUploadState({
+      status: "idle",
+      progress: 0,
+      uploadedBytes: 0,
+      totalBytes: 0,
+      fileName: "",
+      fileSize: 0,
+    });
+  };
+
   return {
     upload,
+    cancel,
     uploadState,
     isIdle: uploadState.status === "idle",
     isUploading: uploadState.status === "uploading",

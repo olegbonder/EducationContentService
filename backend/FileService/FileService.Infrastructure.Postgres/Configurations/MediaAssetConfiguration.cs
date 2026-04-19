@@ -71,5 +71,7 @@ public class MediaAssetConfiguration : IEntityTypeConfiguration<MediaAsset>
             .HasValue<PreviewAsset>(AssetType.PREVIEW);
 
         builder.HasIndex(m => new { m.Status, m.CreatedAt });
+
+        builder.Property(m => m.UploadId).IsRequired(false).HasColumnName("upload_id");
     }
 }

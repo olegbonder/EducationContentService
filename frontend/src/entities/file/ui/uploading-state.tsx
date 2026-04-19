@@ -1,6 +1,7 @@
 import { File } from "lucide-react";
 import { formatFileSize } from "../lib/validators";
 import { Progress } from "@/shared/components/ui/progress";
+import { Button } from "@/shared/components/ui/button";
 
 type Props = {
   fileName?: string;
@@ -8,6 +9,7 @@ type Props = {
   progress: number;
   uploadedBytes?: number;
   totalBytes?: number;
+  onCancel?: () => void;
   icon?: React.ReactNode;
 };
 export function UploadingState({
@@ -16,6 +18,7 @@ export function UploadingState({
   progress,
   uploadedBytes,
   totalBytes,
+  onCancel,
   icon,
 }: Props) {
   const progressText =
@@ -32,7 +35,14 @@ export function UploadingState({
           <p className="text-sm font-medium truncate">{fileName}</p>
           <p className="text-sm text-muted-foreground">{progressText}</p>
         </div>
-
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 shrink-0"
+          onClick={onCancel}
+        >
+          Отменить
+        </Button>
         <div className="space-y-1.5">
           <Progress value={progress} className="h-2" />
           <div className="flex justify-between text-xs text-muted-foreground">

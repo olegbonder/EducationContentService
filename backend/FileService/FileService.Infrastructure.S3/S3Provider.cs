@@ -1,7 +1,6 @@
 ﻿using Amazon.S3;
 using Amazon.S3.Model;
 using CSharpFunctionalExtensions;
-using FileService.Contracts;
 using FileService.Contracts.Dtos;
 using FileService.Core.FilesStorage;
 using FileService.Core.Models;
@@ -248,6 +247,31 @@ public class S3Provider: IS3Provider
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error deleting file from {storageKey}", storageKey);
+            return S3ErrorMapper.ToError(ex);
+        }
+    }
+
+    public async Task<UnitResult<Error>> AbortMultiPartUploadAsync(
+        StorageKey storageKey,
+        string uploadId,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var request = new AbortMultipartUploadRequest
+            {
+                BucketName = storageKey.Location,
+                Key = storageKey.Value,
+                UploadId = uploadId
+            };
+
+            await _s3Client.AbortMultipartUploadAsync(request, cancellationToken);
+
+            return UnitResult.Success<Error>();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error aborting multipart upload for {uploadId}", uploadId);
             return S3ErrorMapper.ToError(ex);
         }
     }

@@ -12,12 +12,10 @@ import { useRef, useState } from "react";
 import { useFileUpload } from "../model/use-file-upload";
 import { AssetType, OwnerType } from "../types";
 import { DropZone } from "./drop-zone";
-import { is } from "zod/v4/locales";
 import { UploadingState } from "./uploading-state";
 import { CompletedState } from "./completed-state";
 import { ErrorState } from "./error-state";
 import { Button } from "@/shared/components/ui/button";
-import { get } from "http";
 import { getAcceptString, getValidatorConfig } from "../lib/validators";
 
 type Props = {
@@ -39,6 +37,7 @@ export function FileUploadDialog({
   const config = getValidatorConfig(assetType);
   const {
     upload,
+    cancel,
     uploadState,
     isIdle,
     isUploading,
@@ -128,6 +127,7 @@ export function FileUploadDialog({
               progress={uploadState.progress}
               uploadedBytes={uploadState.uploadedBytes}
               totalBytes={uploadState.totalBytes}
+              onCancel={cancel}
             />
           )}
           {isFailed && <ErrorState error={error!} />}

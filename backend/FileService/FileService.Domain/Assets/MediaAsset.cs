@@ -20,6 +20,8 @@ namespace FileService.Domain.Assets
         public StorageKey? RawKey { get; protected set; }
         public MediaStatus Status { get; protected set; }
 
+        public string? UploadId { get; protected set; }
+
         public StorageKey? UploadKey => RequiredProcessing() ? RawKey : Key;
 
         protected MediaAsset()
@@ -73,6 +75,16 @@ namespace FileService.Domain.Assets
             }
         }
 
+        public void SetUploadId(string uploadId)
+        {
+            if (Status != MediaStatus.UPLOADING)
+            {
+                return;
+            }
+            UploadId = uploadId;
+            UpdatedAt = DateTime.UtcNow;            
+        }   
+
         public virtual bool RequiredProcessing() => false;
 
         public Result MarkUploaded()
@@ -81,6 +93,7 @@ namespace FileService.Domain.Assets
                 return Result.Success();
 
             Status = MediaStatus.UPLOADED;
+            UploadId = null;
             UpdatedAt = DateTime.UtcNow;
             return Result.Success();
         }

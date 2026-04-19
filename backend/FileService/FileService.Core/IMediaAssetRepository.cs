@@ -9,6 +9,8 @@ public interface IMediaAssetRepository
 {
     void Add(MediaAsset mediaAsset);
 
+    void Delete(MediaAsset mediaAsset);
+
     Task<Result<MediaAsset, Error>> GetBy(Expression<Func<MediaAsset, bool>> predicate, CancellationToken cancellationToken);
 
     Task<Result<VideoAsset, Error>> GetVideoBy(Expression<Func<VideoAsset, bool>> predicate, CancellationToken cancellationToken);
