@@ -17,6 +17,9 @@ namespace FileService.Core
             services.AddScoped<IAssetCreatedEventPublisher, AssetCreatedEventPublisher>();
             services.AddScoped<StartMultiPartUploadHandler>();
             services.AddScoped<CompleteMultiPartUploadHandler>();
+            services.AddScoped<CheckMediaAssetExistsHandler>();
+            services.AddScoped<GetMediaAssetInfoHandler>();
+            services.AddScoped<GetMediaAssetsHandler>();
 
             services.AddQuartzServices(configuration);
             return services;

@@ -12,9 +12,10 @@ import { useDeleteLesson } from "./model/use-delete-lesson";
 type Props = {
   lesson: Lesson;
   onEdit: (lesson: Lesson) => void;
+  onOpenVideoUpload: (lesson: Lesson) => void;
 };
 
-export function LessonCard({ lesson, onEdit }: Props) {
+export function LessonCard({ lesson, onEdit, onOpenVideoUpload }: Props) {
   const { deleteLesson, isPending } = useDeleteLesson();
 
   const handleDelete = (e: React.MouseEvent) => {
@@ -31,9 +32,16 @@ export function LessonCard({ lesson, onEdit }: Props) {
     onEdit(lesson);
   };
 
+  const handleOpenVideoUpload = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    onOpenVideoUpload(lesson);
+  };
+
   return (
-    <Link href={`/lessons/${lesson.id}`}>
-      <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer">
+    <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer">
+      <Link href={`/lessons/${lesson.id}`}>
         <CardHeader className="p-0">
           <div className="relative aspect-video bg-muted flex items-center justify-center rounded-t-lg overflow-hidden">
             {lesson.video ? (
@@ -45,37 +53,40 @@ export function LessonCard({ lesson, onEdit }: Props) {
             )}
           </div>
         </CardHeader>
-        <CardContent className="pt-4">
-          <h3 className="font-semibold text-lg mb-2 line-clamp-2">
-            {lesson.title}
-          </h3>
-          <p className="text-sm text-muted-foreground line-clamp-3">
-            {lesson.description}
-          </p>
-        </CardContent>
-        <CardFooter className="flex justify-between items-center text-xs text-muted-foreground">
-          <span>Обновлено {lesson.updatedAt.toLocaleString()}</span>
-          <div className="flex gap-1">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
-              onClick={handleEdit}
-            >
-              <Pencil className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 text-destructive hover:text-white! hover:bg-red-500! transition-colors"
-              onClick={handleDelete}
-              disabled={isPending}
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          </div>
-        </CardFooter>
-      </Card>
-    </Link>
+      </Link>
+      <CardContent className="pt-4">
+        <h3 className="font-semibold text-lg mb-2 line-clamp-2">
+          {lesson.title}
+        </h3>
+        <p className="text-sm text-muted-foreground line-clamp-3">
+          {lesson.description}
+        </p>
+        <Button onClick={handleOpenVideoUpload} className="mt-4 w-full">
+          Загрузить видео
+        </Button>
+      </CardContent>
+      <CardFooter className="flex justify-between items-center text-xs text-muted-foreground">
+        <span>Обновлено {lesson.updatedAt.toLocaleString()}</span>
+        <div className="flex gap-1">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
+            onClick={handleEdit}
+          >
+            <Pencil className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-destructive hover:text-white! hover:bg-red-500! transition-colors"
+            onClick={handleDelete}
+            disabled={isPending}
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
+      </CardFooter>
+    </Card>
   );
 }

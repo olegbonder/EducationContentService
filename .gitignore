@@ -373,3 +373,4 @@ backend/.idea/indexLayout.xml
 backend/.idea/vcs.xml
 backend/FileService/.idea/.idea.FileService/.idea/dataSources.xml
 backend/FileService/.idea/.idea.FileService/.idea/db-forest-config.xml
+backend/FileService/.idea/.idea.FileService/.idea/sqldialects.xml

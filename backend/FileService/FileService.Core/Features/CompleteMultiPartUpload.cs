@@ -60,7 +60,7 @@ namespace FileService.Core.Features
                 return error;
 
 
-            if (mediaAsset.MediaData.ExpectedChunksCount != request.PartETags.Count)
+            if (mediaAsset.MediaData.ExpectedChunksCount != request.PartETags?.Count)
                 return GeneralErrors.Failure("Количество etags не соответствует количеству чанков");
 
             var completeResult = await _s3Provider.CompleteMultiPartUploadAsync(

@@ -2,6 +2,7 @@
 using FileService.Contracts.Dtos;
 using Microsoft.Extensions.Logging;
 using Shared.SharedKernel;
+using System.Net.Http.Json;
 
 namespace FileService.Contracts.HttpCommunication;
 
@@ -20,7 +21,7 @@ internal sealed class FileHttpClient : IFileCommunicationService
     {
         try
         {
-            var response = await _httpClient.GetAsync($"api/files/batch", cancellationToken);
+            var response = await _httpClient.PostAsync($"api/files/batch", JsonContent.Create(request), cancellationToken);
             return await response.HandleResponseAsync<GetMediaAssetsResponse>(cancellationToken);
         }
         catch (Exception ex)

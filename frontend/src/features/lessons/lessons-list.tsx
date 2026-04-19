@@ -18,17 +18,19 @@ import { LessonsFilters } from "./lessons-filters";
 import { useGetLessonFilter } from "./model/lessons-filters-store";
 import { useLessonsList } from "./model/use-lessons-list";
 import { UpdateLessonDialog } from "./update-lesson-dialog";
+import { LessonVideoUploadDialog } from "./lesson-video-upload-dialog";
 
 export function LessonsList() {
   const globalSearch = useGetGlobalSearch();
 
   const { search, isDeleted, pageSize } = useGetLessonFilter();
 
+  const [isVideoDialogOpen, setVideoDialogOpen] = useState(false);
   const [createOpen, setCreateOpen] = useState(false);
   const [updateOpen, setUpdateOpen] = useState(false);
 
   const [selectedLesson, setSelectedLesson] = useState<Lesson | undefined>(
-    undefined
+    undefined,
   );
 
   const {
@@ -95,6 +97,10 @@ export function LessonsList() {
                   setSelectedLesson(lesson);
                   setUpdateOpen(true);
                 }}
+                onOpenVideoUpload={(lesson) => {
+                  setSelectedLesson(lesson);
+                  setVideoDialogOpen(true);
+                }}
               />
             ))
           )}
@@ -103,17 +109,27 @@ export function LessonsList() {
         <CreateLessonDialog open={createOpen} onOpenChange={setCreateOpen} />
 
         {selectedLesson && (
-          <UpdateLessonDialog
-            key={selectedLesson.id}
-            lesson={selectedLesson}
-            open={selectedLesson !== undefined && updateOpen}
-            onOpenChange={setUpdateOpen}
-          />
+          <div>
+            <UpdateLessonDialog
+              key={selectedLesson.id}
+              lesson={selectedLesson}
+              open={selectedLesson !== undefined && updateOpen}
+              onOpenChange={setUpdateOpen}
+            />
+          </div>
         )}
 
         <div ref={cursorRef} className="flex justify-center py-4">
           {isFetchingNextPage && <Spinner />}
         </div>
+        {selectedLesson && (
+          <LessonVideoUploadDialog
+            key={selectedLesson.id}
+            open={selectedLesson !== undefined && isVideoDialogOpen}
+            onOpenChange={setVideoDialogOpen}
+            lesson={selectedLesson}
+          />
+        )}
       </div>
     </>
   );

@@ -28,5 +28,34 @@ apiClient.interceptors.response.use(
       }
     }
     return Promise.reject(error);
-  }
+  },
+);
+
+export const fsApiClient = axios.create({
+  baseURL: "http://localhost:5098/api/",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+fsApiClient.interceptors.response.use(
+  (response) => {
+    const data = response.data as Envelope;
+
+    if (data.isError && data.error) {
+      throw new EnvelopeError(data.error);
+    }
+
+    return response;
+  },
+  (error) => {
+    if (axios.isAxiosError(error) && error.response?.data) {
+      const envelope = error.response.data as Envelope;
+
+      if (envelope.isError && envelope.error) {
+        throw new EnvelopeError(envelope.error);
+      }
+    }
+    return Promise.reject(error);
+  },
 );
