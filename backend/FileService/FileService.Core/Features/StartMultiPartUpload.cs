@@ -94,7 +94,8 @@ public sealed class StartMultiPartUploadHandler
             mediaAsset.UploadKey, 
             startUploadResult.Value, 
             chunkCalculationResult.Value.TotalChunks, 
-            cancellationToken);
+            cancellationToken,
+            useExternalEndpoint: true);
         if (chunksUploadUrlsResult.IsFailure)
             return chunksUploadUrlsResult.Error;
 

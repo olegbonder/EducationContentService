@@ -4,14 +4,43 @@ services:
     build:
       context: ./backend/EducationContentService
       dockerfile: Dockerfile
+      args:
+        NUGET_USERNAME: $NUGET_USERNAME
+        NUGET_PASSWORD: $NUGET_PASSWORD
     ports:
-      - "9001:9001"
+      - "9006:9001"
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
       - ASPNETCORE_URLS=http://+:9001
     env_file:
       - education.service.env
     restart: always
+    networks:
+      - marafon-network
+
+  file-service:
+    container_name: file-service
+    build:
+      context: ./backend/FileService
+      dockerfile: Dockerfile
+      args:
+        NUGET_USERNAME: $NUGET_USERNAME
+        NUGET_PASSWORD: $NUGET_PASSWORD
+    ports:
+      - "9005:8090"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=http://+:8090
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      - postgres-file-service
+      - minio-dev
+      - seq
+      - rabbitmq
+    networks:
+      - marafon-network
   seq:
     container_name: seq
     image: datalust/seq:latest
@@ -22,6 +51,9 @@ services:
       ACCEPT_EULA: "Y" # Required to accept the Seq End User License Agreement
       SEQ_FIRSTRUN_NOAUTHENTICATION: "true"
     restart: always
+    networks:
+      - marafon-network
+
   postgres-education-service:
     container_name: postgres-education-service
     image: postgres
@@ -37,6 +69,9 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    networks:
+      - marafon-network
+
   postgres-file-service:
     container_name: postgres-file-service
     image: postgres
@@ -52,17 +87,21 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    networks:
+      - marafon-network
   minio-dev:
     container_name: minio-dev
     image: minio/minio:latest
     ports:
       - "9000:9000"
-      - "9003:9001"
+      - "9004:9001"
     environment:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
     command: server --console-address ":9001" /data
     restart: always
+    networks:
+      - marafon-network
 
   rabbitmq:
     image: rabbitmq:4.2-management
@@ -81,6 +120,13 @@ services:
       timeout: 10s
       retries: 5
     restart: always
+    networks:
+      - marafon-network
 
 volumes:
   rabbitmq_data:
+
+networks:
+  marafon-network:
+    driver: bridge
+    name: marafon-network

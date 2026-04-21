@@ -17,11 +17,16 @@ public interface IS3Provider
         StorageKey storageKey,
         string uploadId,
         int totalChunks,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken,
+        bool useExternalEndpoint = false);
 
-    Task<Result<string, Error>> GenerateDownloadUrlAsync(StorageKey storageKey, bool useExternalEndpoint = false);
+    Task<Result<string, Error>> GenerateDownloadUrlAsync(
+        StorageKey storageKey,
+        bool useExternalEndpoint = false);
 
-    Task<Result<IReadOnlyList<MediaUrl>, Error>> GenerateDownloadUrlsAsync(IEnumerable<StorageKey> storageKeys); 
+    Task<Result<IReadOnlyList<MediaUrl>, Error>> GenerateDownloadUrlsAsync(
+        IEnumerable<StorageKey> storageKeys,
+        bool useExternalEndpoint = false); 
 
     Task<Result<string, Error>> GenerateUploadUrlAsync(StorageKey storageKey);
     Task<Result<string, Error>> CompleteMultiPartUploadAsync(

@@ -1,8 +1,10 @@
 ﻿namespace FileService.Infrastructure.S3;
 
-public record S3Options
+public record FileStorageOptions
 {
     public string EndPoint { get; init; } = string.Empty;
+
+    public string ExternalEndPoint { get; init; } = string.Empty;
     public string AccessKey { get; init; } = string.Empty;
     public string SecretKey { get; init; } = string.Empty;
     public bool WithSsl { get; init; }

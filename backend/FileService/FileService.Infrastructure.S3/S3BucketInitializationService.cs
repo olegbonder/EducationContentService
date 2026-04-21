@@ -9,12 +9,12 @@ namespace FileService.Infrastructure.S3;
 
 public class S3BucketInitializationService: BackgroundService
 {
-    private readonly S3Options _s3Options;
+    private readonly FileStorageOptions _s3Options;
     private readonly IAmazonS3 _s3Client;
     private readonly ILogger<S3BucketInitializationService> _logger;
 
     public S3BucketInitializationService(
-        IOptions<S3Options> S3Options,
+        IOptions<FileStorageOptions> S3Options,
         IAmazonS3 s3Client,
         ILogger<S3BucketInitializationService> logger)
     {
