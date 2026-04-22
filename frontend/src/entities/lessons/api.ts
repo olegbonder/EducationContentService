@@ -15,6 +15,11 @@ export type UpdateLessonRequest = {
   description: string;
 };
 
+export type UpdateLessonVideoRequest = {
+  lessonId: string;
+  videoId?: string;
+};
+
 export type GetLessonsRequest = {
   search?: string;
   page: number;
@@ -27,7 +32,7 @@ export const lessonsApi = {
       "/lessons",
       {
         params: request,
-      }
+      },
     );
 
     return response.data.result;
@@ -36,7 +41,7 @@ export const lessonsApi = {
   createLesson: async (request: CreateLessonRequest) => {
     const response = await apiClient.post<CreateLessonRequest>(
       "/lessons",
-      request
+      request,
     );
 
     return response.data;
@@ -55,7 +60,19 @@ export const lessonsApi = {
   }: UpdateLessonRequest) => {
     const response = await apiClient.patch<Envelope<string>>(
       `/lessons/${lessonId}`,
-      { title, description }
+      { title, description },
+    );
+
+    return response.data;
+  },
+
+  updateLessonVideo: async ({
+    lessonId,
+    videoId,
+  }: UpdateLessonVideoRequest) => {
+    const response = await apiClient.patch<Envelope<string>>(
+      `/lessons/${lessonId}/video`,
+      { videoId },
     );
 
     return response.data;

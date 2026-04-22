@@ -24,6 +24,7 @@ type Props = {
   assetType: AssetType;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onSuccess?: (mediaAssetId: string) => Promise<void>;
 };
 export function FileUploadDialog({
   ownerId,
@@ -31,6 +32,7 @@ export function FileUploadDialog({
   assetType,
   open,
   onOpenChange,
+  onSuccess,
 }: Props) {
   const [isDragging, setIsDragging] = useState(false);
 
@@ -48,6 +50,7 @@ export function FileUploadDialog({
     ownerId,
     ownerType,
     assetType,
+    onSuccess,
   });
   const fileInputRef = useRef<HTMLInputElement>(null);
 

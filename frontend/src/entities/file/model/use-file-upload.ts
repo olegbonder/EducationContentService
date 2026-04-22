@@ -7,17 +7,21 @@ import {
   StartMultipartUploadResponse,
 } from "../api";
 import { isEnvelopeError } from "@/shared/api/errors";
-import { is } from "zod/v4/locales";
 import { validateFile } from "../lib/validators";
-import { error } from "console";
 
 export type Props = {
   ownerId: string;
   ownerType: OwnerType;
   assetType: AssetType;
+  onSuccess?: (mediaAssetId: string) => Promise<void>;
 };
 
-export function useFileUpload({ ownerId, ownerType, assetType }: Props) {
+export function useFileUpload({
+  ownerId,
+  ownerType,
+  assetType,
+  onSuccess,
+}: Props) {
   const abortControllerRef = useRef<AbortController | null>(null);
   const currentUploadRef = useRef<{ mediaAssetId: string } | null>(null);
   const [uploadState, setUploadState] = useState<UploadProgress>({
@@ -94,6 +98,10 @@ export function useFileUpload({ ownerId, ownerType, assetType }: Props) {
         fileName: file.name,
         fileSize: file.size,
       }));
+
+      if (onSuccess) {
+        await onSuccess(mediaAssetId);
+      }
 
       return mediaAssetId;
     } catch (error) {

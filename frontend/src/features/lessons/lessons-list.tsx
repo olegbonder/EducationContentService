@@ -18,8 +18,8 @@ import { LessonsFilters } from "./lessons-filters";
 import { useGetLessonFilter } from "./model/lessons-filters-store";
 import { useLessonsList } from "./model/use-lessons-list";
 import { UpdateLessonDialog } from "./update-lesson-dialog";
-import { LessonVideoUploadDialog } from "./lesson-video-upload-dialog";
 import { FileUploadDialog } from "@/entities/file/ui/file-upload-dialog";
+import { useUpdateLessonVideo } from "./model/use-update-lesson-video";
 
 export function LessonsList() {
   const globalSearch = useGetGlobalSearch();
@@ -33,6 +33,8 @@ export function LessonsList() {
   const [selectedLesson, setSelectedLesson] = useState<Lesson | undefined>(
     undefined,
   );
+
+  const { updateLessonVideo } = useUpdateLessonVideo();
 
   const {
     lessons,
@@ -130,6 +132,12 @@ export function LessonsList() {
             ownerId={selectedLesson.id}
             ownerType="lesson"
             assetType="video"
+            onSuccess={async (mediaAssetId) => {
+              updateLessonVideo({
+                lessonId: selectedLesson.id,
+                videoId: mediaAssetId,
+              });
+            }}
           />
         )}
       </div>

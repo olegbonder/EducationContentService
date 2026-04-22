@@ -47,7 +47,7 @@ namespace FileService.Core.Features
             var mediaAssets = await _readDbContext.MediaAssetsQuery
                 .Where(m => request.MediaAssetIds.Contains(m.Id) && m.Status != MediaStatus.DELETED).ToListAsync(cancellationToken);
             
-            var readyMediaAssets = mediaAssets.Where(m => m.Status == MediaStatus.READY).ToList();
+            var readyMediaAssets = mediaAssets.Where(m => m.Status == MediaStatus.UPLOADED).ToList();
             var keys = readyMediaAssets.Select(m => m.UploadKey).ToList();
             var urlsResult = await _s3Provider.GenerateDownloadUrlsAsync(keys);
             if (urlsResult.IsFailure)
@@ -60,7 +60,7 @@ namespace FileService.Core.Features
             foreach (MediaAsset mediaAsset in mediaAssets)
             {
                 string? downloadUrl = null;
-                if (mediaAsset.Key != null && urlsDict.TryGetValue(mediaAsset.Key, out string? url))
+                if (mediaAsset.UploadKey != null && urlsDict.TryGetValue(mediaAsset.UploadKey, out string? url))
                 {
                     downloadUrl = url;                   
                 };

@@ -41,19 +41,24 @@ export function LessonCard({ lesson, onEdit, onOpenVideoUpload }: Props) {
 
   return (
     <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer">
-      <Link href={`/lessons/${lesson.id}`}>
-        <CardHeader className="p-0">
-          <div className="relative aspect-video bg-muted flex items-center justify-center rounded-t-lg overflow-hidden">
-            {lesson.video ? (
-              <Play className="w-12 h-12 text-muted-foreground" />
-            ) : (
+      <CardHeader className="p-0">
+        <div className="relative aspect-video bg-muted flex items-center justify-center rounded-t-lg overflow-hidden">
+          {lesson.video?.url ? (
+            <video
+              src={lesson.video.url}
+              className="object-contain w-full h-full"
+              controls
+              preload="metadata"
+            />
+          ) : (
+            <Link href={`/lessons/${lesson.id}`}>
               <div className="text-muted-foreground text-sm">
                 Видео отсутствует
               </div>
-            )}
-          </div>
-        </CardHeader>
-      </Link>
+            </Link>
+          )}
+        </div>
+      </CardHeader>
       <CardContent className="pt-4">
         <h3 className="font-semibold text-lg mb-2 line-clamp-2">
           {lesson.title}
@@ -61,9 +66,11 @@ export function LessonCard({ lesson, onEdit, onOpenVideoUpload }: Props) {
         <p className="text-sm text-muted-foreground line-clamp-3">
           {lesson.description}
         </p>
-        <Button onClick={handleOpenVideoUpload} className="mt-4 w-full">
-          Загрузить видео
-        </Button>
+        {!lesson.video && (
+          <Button onClick={handleOpenVideoUpload} className="mt-4 w-full">
+            Загрузить видео
+          </Button>
+        )}
       </CardContent>
       <CardFooter className="flex justify-between items-center text-xs text-muted-foreground">
         <span>Обновлено {lesson.updatedAt.toLocaleString()}</span>

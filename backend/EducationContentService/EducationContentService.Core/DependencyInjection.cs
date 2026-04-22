@@ -14,6 +14,7 @@ namespace EducationContentService.Core
             services.AddScoped<GetHanlder>();
             services.AddScoped<SoftDeleteHanlder>();
             services.AddScoped<UpdateInfoHanlder>();
+            services.AddScoped<AttachVideoHanlder>();
 
             services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
 
