@@ -9,6 +9,7 @@
         public MediaDto? Video { get; set; } = null!;
         public DateTime CreatedAt { get; init; }
         public DateTime UpdatedAt { get; init; }
+        public bool IsDeleted { get; init; }
     }
 
     public record MediaDto

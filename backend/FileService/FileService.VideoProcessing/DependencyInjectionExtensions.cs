@@ -28,6 +28,7 @@ public static class DependencyInjectionExtensions
         services.AddScoped<IProcessingStepHandler, UploadeHlsStepHandler>();
         services.AddScoped<IProcessingStepHandler, CleanupStepHandler>();
         
+        services.AddTransient<VideoProcessingJob>();
         services.AddScoped<IProcessingJobFactory, VideoProcessingJobFactory>();
         return services;
     }

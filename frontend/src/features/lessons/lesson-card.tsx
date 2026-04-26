@@ -5,9 +5,16 @@ import {
   CardFooter,
   CardHeader,
 } from "@/shared/components/ui/card";
-import { Pencil, Play, Trash2 } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useDeleteLesson } from "./model/use-delete-lesson";
+import "@vidstack/react/player/styles/default/theme.css";
+import "@vidstack/react/player/styles/default/layouts/video.css";
+import { MediaPlayer, MediaProvider } from "@vidstack/react";
+import {
+  defaultLayoutIcons,
+  DefaultVideoLayout,
+} from "@vidstack/react/player/layouts/default";
 
 type Props = {
   lesson: Lesson;
@@ -43,13 +50,22 @@ export function LessonCard({ lesson, onEdit, onOpenVideoUpload }: Props) {
     <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer">
       <CardHeader className="p-0">
         <div className="relative aspect-video bg-muted flex items-center justify-center rounded-t-lg overflow-hidden">
-          {lesson.video?.url ? (
-            <video
+          {/*<video
               src={lesson.video.url}
               className="object-contain w-full h-full"
               controls
               preload="metadata"
-            />
+            />*/}
+          {lesson.video?.url ? (
+            <MediaPlayer
+              title={lesson.title}
+              src={lesson.video.url}
+            >
+              <MediaProvider />
+              <DefaultVideoLayout                
+                icons={defaultLayoutIcons}
+              />
+            </MediaPlayer>
           ) : (
             <Link href={`/lessons/${lesson.id}`}>
               <div className="text-muted-foreground text-sm">
@@ -66,11 +82,20 @@ export function LessonCard({ lesson, onEdit, onOpenVideoUpload }: Props) {
         <p className="text-sm text-muted-foreground line-clamp-3">
           {lesson.description}
         </p>
-        {!lesson.video && (
+        {(!lesson.isDeleted && (!lesson.video ||
+          lesson.video.status === "failed" ||
+          lesson.video.status === "deleted" ||
+          !lesson.video.status)) && (
           <Button onClick={handleOpenVideoUpload} className="mt-4 w-full">
             Загрузить видео
           </Button>
         )}
+        {lesson.video?.status === "uploading" ||
+          (lesson.video?.status === "processing" && (
+            <div className="mt-4 text-sm text-muted-foreground text-center">
+              Загрузка видео...
+            </div>
+          ))}
       </CardContent>
       <CardFooter className="flex justify-between items-center text-xs text-muted-foreground">
         <span>Обновлено {lesson.updatedAt.toLocaleString()}</span>

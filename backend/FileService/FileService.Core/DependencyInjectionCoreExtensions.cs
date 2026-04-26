@@ -40,7 +40,6 @@ namespace FileService.Core
                    });
                    
                    persistenceOptions.UseNewtonsoftJsonSerializer();
-                   persistenceOptions.UseProperties = true;
                });
                
                /*var testJobKey = new JobKey("testJob");
@@ -54,7 +53,11 @@ namespace FileService.Core
                        .RepeatForever()));*/
             });
             
-            services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
+            services.AddQuartzHostedService(options =>
+            {
+                options.WaitForJobsToComplete = true;
+                options.AwaitApplicationStarted = true;
+            });
 
             return services;
         }

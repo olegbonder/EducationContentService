@@ -96,6 +96,7 @@ namespace EducationContentService.Core.Features.Lessons
                 Description = l.Description.Value,
                 CreatedAt = l.CreatedAt,
                 UpdatedAt = l.UpdatedAt,
+                IsDeleted = l.IsDeleted,
                 Video = l.VideoId.HasValue ? new MediaDto
                 {
                     Id = l.VideoId.Value

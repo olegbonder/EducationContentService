@@ -5,6 +5,7 @@ type Lesson = {
   video?: MediaDto;
   createdAt: Date;
   updatedAt: Date;
+  isDeleted: boolean;
 };
 
 type MediaDto = {
@@ -13,12 +14,10 @@ type MediaDto = {
   status: MediaStatus;
 };
 
-type MediaStatus = "uploading" | "uploaded" | "ready" | "failed" | "deleted";
-
-/*enum MediaStatus {
-  UPLOADING = "UPLOADING",
-  UPLOADED = "UPLOADED",
-  READY = "READY",
-  FAILED = "FAILED",
-  DELETED = "DELETED",
-}*/
+type MediaStatus =
+  | "uploading"
+  | "uploaded"
+  | "ready"
+  | "processing"
+  | "failed"
+  | "deleted";

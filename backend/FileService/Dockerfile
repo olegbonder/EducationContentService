@@ -27,7 +27,20 @@ COPY ["FileService.Infrastructure.S3/FileService.Infrastructure.S3.csproj", "Fil
 COPY ["FileService.VideoProcessing/FileService.VideoProcessing.csproj", "FileService.VideoProcessing/"]
 RUN dotnet restore "FileService.Web/FileService.Web.csproj"
 COPY . .
+
+RUN dotnet tool install --global dotnet-ef 9.0.0
+ENV PATH="root/.dotnet/tools:${PATH}"
+
 WORKDIR "/src/FileService.Web"
+
+RUN dotnet ef migrations bundle \
+    --project "../FileService.Infrastructure.Postgres/FileService.Infrastructure.Postgres.csproj"
+    --startup-project "FileService.Web.csproj"
+    --output /app/efbundle \
+    --configuration $BUILD_CONFIGURATION \
+    --verbose \
+    -- --configfile /src/nuget.config
+
 RUN dotnet build "./FileService.Web.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
@@ -36,5 +49,18 @@ RUN dotnet publish "./FileService.Web.csproj" -c $BUILD_CONFIGURATION -o /app/pu
 
 FROM base AS final
 WORKDIR /app
+
+#Все операции от root
+USER root
+
+#Установка Ffmpeg и создание директорий
+RUN apt-get update \
+    && apt-get install -y ffmpeg \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY --from=publish /app/publish .
+COPY --from=build /app/efbundle .
+
+USER $APP_UID
+
 ENTRYPOINT ["dotnet", "FileService.Web.dll"]

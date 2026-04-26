@@ -21,7 +21,8 @@ public class VideoProcessingJob : IJob
     public async Task Execute(IJobExecutionContext context)
     {
         var dataMap = context.MergedJobDataMap;
-        var videoAssetId = dataMap.GetGuid(VideoAssetIdKey.Name);
+        var videoAssetIdStr = dataMap.GetString(VideoAssetIdKey.Name);
+        var videoAssetId = Guid.Parse(videoAssetIdStr);
         _logger.LogInformation("Starting Video processing job for VideoAssetId: {VideoAssetId}", videoAssetId);
         var result = await _videoProcessingService.ProcessVideoAsync(videoAssetId);
         if (result.IsFailure)
