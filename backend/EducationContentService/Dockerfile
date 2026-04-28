@@ -1,45 +1,33 @@
-﻿# См. статью по ссылке https://aka.ms/customizecontainer, чтобы узнать как настроить контейнер отладки и как Visual Studio использует этот Dockerfile для создания образов для ускорения отладки.
-
-# Этот этап используется при запуске из VS в быстром режиме (по умолчанию для конфигурации отладки)
-FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
-USER $APP_UID
-WORKDIR /app
-EXPOSE 9001
-
-
-# Этот этап используется для сборки проекта службы
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
-ARG BUILD_CONFIGURATION=Docker
+﻿FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+ARG BUILD_CONFIGURATION=Release
 ARG NUGET_USERNAME
 ARG NUGET_PASSWORD
 #RUN dotnet dev-certs https
 WORKDIR /src
 
-RUN dotnet nuget add source https://nuget.pkg.github.com/olegbonder/index.json \
-    -n github \
+COPY ["nuget.config", "."]
+COPY [".editorconfig", "."]
+
+RUN dotnet nuget update source github \
     --username $NUGET_USERNAME \
     --password $NUGET_PASSWORD \
-    --store-password-in-clear-text
+    --store-password-in-clear-text \
+    --configfile nuget.config
 
-COPY ["Directory.Packages.props", "."]
-COPY ["Directory.Build.props", "."]
-COPY ["EducationContentService.Web/EducationContentService.Web.csproj", "EducationContentService.Web/"]
-COPY ["EducationContentService.Contracts/EducationContentService.Contracts.csproj", "EducationContentService.Contracts/"]
-COPY ["EducationContentService.Core/EducationContentService.Core.csproj", "EducationContentService.Core/"]
-COPY ["EducationContentService.Domain/EducationContentService.Domain.csproj", "EducationContentService.Domain/"]
-COPY ["EducationContentService.Infrastructure.Postgres/EducationContentService.Infrastructure.Postgres.csproj", "EducationContentService.Infrastructure.Postgres/"]
-RUN dotnet restore "./EducationContentService.Web/EducationContentService.Web.csproj"
-COPY . .
-WORKDIR "/src/EducationContentService.Web"
-RUN dotnet build "./EducationContentService.Web.csproj" -c $BUILD_CONFIGURATION -o /app/build
+COPY ["EducationContentService/", "EducationContentService/"]
+RUN dotnet restore "EducationContentService/EducationContentService.Web/EducationContentService.Web.csproj"
 
-# Этот этап используется для публикации проекта службы, который будет скопирован на последний этап
-FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./EducationContentService.Web.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+WORKDIR "/src/EducationContentService/EducationContentService.Web"
 
-# Этот этап используется в рабочей среде или при запуске из VS в обычном режиме (по умолчанию, когда конфигурация отладки не используется)
-FROM base AS final
+RUN dotnet publish "EducationContentService.Web.csproj" \
+    -c $BUILD_CONFIGURATION \
+    -o /app/publish \
+    /p:UseAppHost=false
+
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
+
+COPY --from=build /app/publish .
+
+EXPOSE 5238
 ENTRYPOINT ["dotnet", "EducationContentService.Web.dll"]

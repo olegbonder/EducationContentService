@@ -2,16 +2,18 @@ services:
   education-content-service:
     container_name: education-content-service
     build:
-      context: ./backend/EducationContentService
-      dockerfile: Dockerfile
+      context: ./backend
+      dockerfile: EducationContentService/Dockerfile
       args:
-        NUGET_USERNAME: $NUGET_USERNAME
-        NUGET_PASSWORD: $NUGET_PASSWORD
+        NUGET_USERNAME: ${NUGET_USERNAME}
+        NUGET_PASSWORD: ${NUGET_PASSWORD}
     ports:
-      - "9006:9001"
+      - "5238:5238"
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
-      - ASPNETCORE_URLS=http://+:9001
+      - ASPNETCORE_URLS=http://+:5238
+    env_file:
+      - .env
     restart: always
 
   file-service:
@@ -20,8 +22,8 @@ services:
       context: ./backend/FileService
       dockerfile: Dockerfile
       args:
-        NUGET_USERNAME: $NUGET_USERNAME
-        NUGET_PASSWORD: $NUGET_PASSWORD
+        NUGET_USERNAME: ${NUGET_USERNAME}
+        NUGET_PASSWORD: ${NUGET_PASSWORD}
     ports:
       - "9005:8090"
     environment:
