@@ -27,10 +27,9 @@ namespace EducationContentService.Web.Configuration
             {
                 options.SwaggerEndpoint("/openapi/v1.json", "Education Content Service V1");
             });
-
-            var apiGroup = app.MapGroup("/api").WithOpenApi();
-            app.UseEndPoints(apiGroup);
-
+            
+            app.UseEndPoints();
+            
             return app;
         }
     }

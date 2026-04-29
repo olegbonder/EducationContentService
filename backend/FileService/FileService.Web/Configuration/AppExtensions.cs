@@ -37,8 +37,7 @@ namespace FileService.Web.Configuration
                 return factory.GetScheduler().GetAwaiter().GetResult();
             });
 
-            var apiGroup = app.MapGroup("/api").WithOpenApi();
-            app.UseEndPoints(apiGroup);
+            app.UseEndPoints();
 
             return app;
         }

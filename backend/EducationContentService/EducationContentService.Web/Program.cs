@@ -36,7 +36,6 @@ try
                                             // ИЛИ с миграциями:
                                             // dbContext.Database.Migrate();
     }
-
     app.Run();
 }
 catch (Exception ex)

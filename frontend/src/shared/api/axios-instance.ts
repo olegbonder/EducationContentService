@@ -3,7 +3,7 @@ import { Envelope } from "./envelope";
 import { EnvelopeError } from "./errors";
 
 export const apiClient = axios.create({
-  baseURL: "http://localhost:5238/api/",
+  baseURL: "http://localhost/api/",
   //baseURL: "http://localhost:9006/api/",
   headers: {
     "Content-Type": "application/json",
@@ -33,7 +33,7 @@ apiClient.interceptors.response.use(
 );
 
 export const fsApiClient = axios.create({
-  baseURL: "http://localhost:5098/api/",
+  baseURL: "http://localhost/api/",
   //baseURL: "http://localhost:9005/api/",
   headers: {
     "Content-Type": "application/json",

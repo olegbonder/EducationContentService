@@ -21,7 +21,7 @@ internal sealed class FileHttpClient : IFileCommunicationService
     {
         try
         {
-            var response = await _httpClient.PostAsync($"api/files/batch", JsonContent.Create(request), cancellationToken);
+            var response = await _httpClient.PostAsync($"files/batch", JsonContent.Create(request), cancellationToken);
             return await response.HandleResponseAsync<GetMediaAssetsResponse>(cancellationToken);
         }
         catch (Exception ex)
@@ -37,7 +37,7 @@ internal sealed class FileHttpClient : IFileCommunicationService
         try
         {
             var response = await _httpClient
-                .GetAsync($"api/files/{mediaAssetId}/exists", cancellationToken);
+                .GetAsync($"files/{mediaAssetId}/exists", cancellationToken);
             return await response.HandleResponseAsync<CheckMediaAssetExistsResponse>(cancellationToken);
         }
         catch (Exception ex)

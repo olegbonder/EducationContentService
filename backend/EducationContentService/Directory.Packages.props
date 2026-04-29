@@ -4,7 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="Core" Version="0.0.2" />
-    <PackageVersion Include="FileService.Contracts" Version="0.0.3" />
+    <PackageVersion Include="FileService.Contracts" Version="0.0.4" />
     <PackageVersion Include="Framework" Version="0.0.2" />
     <PackageVersion Include="IntegrationEvents" Version="0.0.2" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.14" />
